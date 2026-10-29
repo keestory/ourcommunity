@@ -3,9 +3,10 @@ product:
   name: ourcommunity
   one_line: 비공개 그룹 대화와 운동 참여가 함께 꾸미고 키우는 커뮤니티 공간으로 연결되는 서비스
   target_market: 한국은 준비용 가정; 국가 확정·도시·확보 그룹은 미정
-  primary_user: 스포츠 직접 참여자; 러닝 우선은 제안, 크로스핏은 비교/후속 후보
+  primary_user: 스포츠 직접 참여자; 첫 검증은 러닝 크루로 사용자 확정, 크로스핏은 비교/후속 후보
   repository_baseline: 447c0a61883d6e0f0002a0f63735b7b58fa63441
   implemented_product: true
+  initial_validation: 과금 없는 모바일 웹에서 일정·신청·출석과 기존 비공개 대화·공동 성장 경험 검증
 status:
   active_gate: 0
   gates_in_preparation:
@@ -44,12 +45,13 @@ evidence:
   - 'E12: 채팅 원문 비공개, 독특한 활기 표현 요구'
   - 'E05: 가져온 32개 테스트는 하네스 기준선; 이후 서비스 테스트는 별도 실행'
   - 'E15: 사용자 후속 요청으로 로컬 제품 개발 승인; 연구 완료·출시 승인은 아님'
+  - 'E17: 지연된 준비 질문 응답으로 러닝 우선·초기 모바일 웹 무료 검증 선택; 이후 채팅/공동 성장 및 개발 승인 유지'
   official_source_reviews_received:
   - 'E07–E10: Heylo/Wodify/SugarWOD/WebKit 공식자료를 관리 작업이 확인하여 전달'
   - 'E14/R01–R05: Clubhouse/Gather Classic/Discord/Habitica/Forest 공식 패턴 검토 전달'
   external_estimates: []
   assumptions:
-  - 한국·러닝 우선; 도시/그룹/플랫폼/과금 미정
+  - 한국은 가정; 도시/실제 그룹/생산 플랫폼/장기 과금 미정. 초기 러닝·무료 모바일 웹 검증은 확정
   - 2D 디지털 공동 공간·비금전 기념물·검증된 기여는 신규 제안
   - 작은 그룹 억제·지연·단계화와 영구성장/최근활기 분리는 제안
   contradictions:
@@ -66,11 +68,13 @@ decisions:
   - D09
   - D11
   - D12
+  - D13
+  - D14
   pending_user_decisions:
-  - 'Q1: 첫 종목·지역·접근 가능한 실제 그룹'
-  - 'Q2: 대상 기기·설치/알림 요구를 통한 플랫폼 비교'
+  - 'Q1: 첫 검증 지역과 접근 가능한 실제 러닝 크루'
+  - 'Q2: 초기 모바일 웹의 대상 기기와 설치/알림/복귀 요구; 생산 플랫폼은 후속 검증'
   - 'Q3: 공동 공간의 표현과 의미 있는 첫 기여 후보'
-  superseded_question: 모바일 웹 일정·신청·출석 우선 범위 질문은 폐기; 답변 대기하지 않음
+  superseded_question: 과거 일정 중심 질문의 지연 답변은 러닝·무료 모바일 웹 검증 선택으로 반영; 이후 비공개 대화·공동 성장 방향이나 개발 승인을 철회하지 않음
   stop_conditions:
   - 외부 메신저 재전달/운영자 독촉 없이는 대화 유지 안 됨
   - 기여 규칙이 도배·과도 운동·배제·공개 감시를 유발
@@ -91,13 +95,19 @@ execution:
   - 'Gate2: 인터뷰·자발적 이전·반복 행동 증거 없음; 실제 모집/연락 미승인'
   - 'Game Concept/Prototype: 비교/과업/공정성 시험 미완료'
   - 'Gate3–5: 사업/UX/권한·보관·운영·집계/기여 규칙 미확정'
-  next_step: 실제 대상 기기·자발적 사용자 검증과 인증/알림/보관·배포 조건 결정; 원격 반영은 후속 지시 필요
+  next_step: API 접근 가능한 환경에서 초안 PR과 CI 확인; 러닝 크루 무료 모바일 웹 검증의 실제 그룹·기기·정책 준비. 모집·배포는 미실행
   plan: docs/product-specs/ourcommunity/execution-qa.md
   code_changes: true
   commit_created: true
-  remote_push: false
+  remote_push: true
   deployed: false
   external_contact: false
+  publication:
+    branch: feat/sports-community-prototype
+    verified_implementation_sha: a6fcc3bda2c8607b10025a751a0a3224c5636417
+    draft_pr: 'blocked: GitHub API 403'
+    ci: 'unverified: GitHub API 403'
+    main_changed: false
 quality:
   report: docs/implementation/verification.md
   acceptance_evidence:
