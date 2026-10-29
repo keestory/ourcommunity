@@ -1,0 +1,22 @@
+/* Generated from DESIGN.md. Run npm run tokens; do not edit. */
+:root {
+  --color-primary: #28594F;
+  --color-ink: #203D3B;
+  --color-muted: #5D716C;
+  --color-background: #F3F6F2;
+  --color-surface: #FFFFFF;
+  --color-border: #DCE5DD;
+  --color-meadow: #E2EDCF;
+  --color-sky: #E9F1EE;
+  --color-clay: #AC603D;
+  --color-danger: #AB3D32;
+  --color-focus: #23645A;
+  --font-body: "Noto Sans KR Variable", "Apple SD Gothic Neo", sans-serif;
+  --font-display: "Outfit Variable", "Noto Sans KR Variable", sans-serif;
+  --radius-control: 0.75rem;
+  --radius-panel: 1.25rem;
+  --radius-dialog: 1.5rem;
+  --space-field: 1rem;
+  --space-section: 2rem;
+  --space-page: 2.5rem;
+}

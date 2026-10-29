@@ -3,3 +3,9 @@ __pycache__/
 .pytest_cache/
 .venv/
 .harness/
+
+# Local web application
+web/node_modules/
+web/dist/
+web/test-results/
+web/playwright-report/

@@ -1,0 +1,136 @@
+schema_version: 1
+product:
+  name: ourcommunity
+  one_line: 비공개 그룹 대화와 운동 참여가 함께 꾸미고 키우는 커뮤니티 공간으로 연결되는 서비스
+  target_market: 한국은 준비용 가정; 국가 확정·도시·확보 그룹은 미정
+  primary_user: 스포츠 직접 참여자; 러닝 우선은 제안, 크로스핏은 비교/후속 후보
+  repository_baseline: 447c0a61883d6e0f0002a0f63735b7b58fa63441
+  implemented_product: true
+status:
+  active_gate: 0
+  gates_in_preparation:
+  - 0
+  - 1
+  - 2
+  gate_verdict: blocked
+  review_level: L2 local implementation
+  review_verdict: pass
+  task_grade: S3 제품 / 로컬 구현 L2 검증 완료
+  primary_industry: community
+  secondary_industries:
+  - o2o-reservation
+  - game
+  primary_capability: product-implementation
+  supporting_capabilities:
+  - product-planning
+  - design-intelligence
+  - quality-assurance
+  - privacy
+  task_scope: 로컬 구현·검증 승인; 푸시·배포·외부 연락·계정/비용 생성 없음
+  discoverability: required
+  store_compliance: not-applicable
+  store_compliance_reason: 로컬 브라우저 제품이며 모바일 스토어 제출 없음; 네이티브 선택 시 재판정
+  competitive_benchmark: required
+  updated_at: '2026-10-30'
+  timezone: Asia/Seoul
+  discoverability_reason: 초대·공개 공간 로컬 경로의 안전한 복귀와 권한을 검증; 공개 검색 배포·색인 없음
+  local_implementation_verdict: pass
+evidence:
+  register: docs/product-specs/ourcommunity/evidence-decisions.md
+  observed_facts:
+  - 'E01/E02: 직접 운동 참여자, 러닝/크로스핏 후보라는 사용자 인용 전달'
+  - 'E04: 우리 앱으로 이동해 지속 대화한다는 확정 방향'
+  - 'E11: 참여가 커뮤니티/시설을 함께 꾸미고 키우는 애셋이 되는 비전'
+  - 'E12: 채팅 원문 비공개, 독특한 활기 표현 요구'
+  - 'E05: 가져온 32개 테스트는 하네스 기준선; 이후 서비스 테스트는 별도 실행'
+  - 'E15: 사용자 후속 요청으로 로컬 제품 개발 승인; 연구 완료·출시 승인은 아님'
+  official_source_reviews_received:
+  - 'E07–E10: Heylo/Wodify/SugarWOD/WebKit 공식자료를 관리 작업이 확인하여 전달'
+  - 'E14/R01–R05: Clubhouse/Gather Classic/Discord/Habitica/Forest 공식 패턴 검토 전달'
+  external_estimates: []
+  assumptions:
+  - 한국·러닝 우선; 도시/그룹/플랫폼/과금 미정
+  - 2D 디지털 공동 공간·비금전 기념물·검증된 기여는 신규 제안
+  - 작은 그룹 억제·지연·단계화와 영구성장/최근활기 분리는 제안
+  contradictions:
+  - 카카오 유지·채팅 제외·운영도구 우선 가정은 사용자 E04로 폐기
+  - 기능 조합 자체는 Heylo 대비 차별화 근거가 아님
+  - 그룹 전환/소속감 효과와 고객 수요는 아직 검증되지 않음
+  expiring_evidence:
+  - 공식자료 확인 2026-10-29; 30일 경과 또는 플랫폼/정책 변경 시 재검토
+decisions:
+  log: docs/product-specs/ourcommunity/evidence-decisions.md
+  latest:
+  - D02
+  - D07
+  - D09
+  - D11
+  - D12
+  pending_user_decisions:
+  - 'Q1: 첫 종목·지역·접근 가능한 실제 그룹'
+  - 'Q2: 대상 기기·설치/알림 요구를 통한 플랫폼 비교'
+  - 'Q3: 공동 공간의 표현과 의미 있는 첫 기여 후보'
+  superseded_question: 모바일 웹 일정·신청·출석 우선 범위 질문은 폐기; 답변 대기하지 않음
+  stop_conditions:
+  - 외부 메신저 재전달/운영자 독촉 없이는 대화 유지 안 됨
+  - 기여 규칙이 도배·과도 운동·배제·공개 감시를 유발
+  - 권한/소수 집계/삭제/운영 대응의 중대한 위험 미해결
+execution:
+  active_work: []
+  completed_work:
+  - 하네스 103파일/20역할 복사와 원격 main 확인은 이전 작업에서 완료
+  - 확정 비전/가정/근거·PRD·성장·활기·ADR·측정·QA 초안 작성
+  - 14개 문서 변경, 61개 상대 링크·YAML·공백 검사와 기존 린터 통과
+  - FastAPI/SQLite API와 서비스 테스트 19개 작성; 기존 32개 포함 51개 통과(초기 실행)
+  - 비공개 대화·모임·출석·공동 공간을 실제 API에 연결한 한국어 웹 구현
+  - 독립 검토 6개 기능 결함과 접근성 개선, Python 65개 및 브라우저9개 최종 통과
+  - 합성 데이터 화면 11개와 실행·검증 기록 작성; 원격 푸시·배포 없음
+  blockers:
+  - 'Gate0: 대상/기기/성공·중단 기준 미확정'
+  - 'Gate1: 기능 설명 외에 독립 고객 문제/수요 근거 부족'
+  - 'Gate2: 인터뷰·자발적 이전·반복 행동 증거 없음; 실제 모집/연락 미승인'
+  - 'Game Concept/Prototype: 비교/과업/공정성 시험 미완료'
+  - 'Gate3–5: 사업/UX/권한·보관·운영·집계/기여 규칙 미확정'
+  next_step: 실제 대상 기기·자발적 사용자 검증과 인증/알림/보관·배포 조건 결정; 원격 반영은 후속 지시 필요
+  plan: docs/product-specs/ourcommunity/execution-qa.md
+  code_changes: true
+  commit_created: true
+  remote_push: false
+  deployed: false
+  external_contact: false
+quality:
+  report: docs/implementation/verification.md
+  acceptance_evidence:
+  - 기존 준비 문서 L1 결과는 보존; 구현 검증은 별도 기록
+  - 독립 백엔드/프런트 검토 및 수정 후 재검증 완료
+  - strict UI audit 오류·경고 0; 토큰/문서 링크/YAML/공백 검사 Pass
+  tests:
+  - 'Python 65 passed: 서비스33 + 기존하네스32'
+  - Chromium E2E9 passed, 모바일 주요5화면 axe0,320px overflow없음
+  - ESLint/TypeScript/Vite build Pass; 하네스 lint 오류0·제3자경고2
+  - 실제 기기·사용자 행동·외부 인증/푸시·배포 검증은 미실행
+  unresolved_risks:
+  - 실제 고객 수요·그룹 이전·반복 사용·성장 효과 미검증
+  - 생산 인증·푸시·계정 삭제/보관·소유권 이전·운영 체계 미구현
+  - 공개 집계 k/지연은 시험 정책이며 익명성 보장·실데이터 공개 승인이 아님
+  - 운영자 공모·공정성·부상/장애 참여·시설 변경/자산 귀속 정책 미검증
+  - SQLite 단일 인스턴스/폴링의 성능·실제 모바일 기기·운영 가용성 미검증
+artifacts:
+- docs/product-specs/ourcommunity/README.md
+- docs/product-specs/ourcommunity/product-brief.md
+- docs/product-specs/ourcommunity/evidence-decisions.md
+- docs/product-specs/ourcommunity/prd-draft.md
+- docs/product-specs/ourcommunity/shared-growth.md
+- docs/product-specs/ourcommunity/activity-patterns.md
+- docs/product-specs/ourcommunity/data-architecture.md
+- docs/product-specs/ourcommunity/research-metrics.md
+- docs/product-specs/ourcommunity/execution-qa.md
+- docs/product-specs/ourcommunity/review-report.md
+- README.md
+- DESIGN.md
+- UX-CONTRACT.md
+- docs/implementation/local-product.md
+- docs/implementation/verification.md
+- docs/implementation/changed-files.txt
+- docs/implementation/premium-audit.json
+- docs/implementation/design-lint.json
