@@ -1,3 +1,5 @@
+import { BROWSER_DEMO } from '../demo/storage'
+import { DemoError } from '../demo/model'
 let csrf: string | null = null
 export function setCsrf(value: string | null) { csrf = value }
 export class ApiError extends Error {
@@ -6,6 +8,10 @@ export class ApiError extends Error {
   constructor(message: string, status = 0, fields: { field: string; message: string }[] = []) { super(message); this.status = status; this.fields = fields }
 }
 export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
+  if (BROWSER_DEMO) {
+    try { const { demoApi } = await import('../demo/api'); return await demoApi<T>(path, options) }
+    catch (error) { if (error instanceof DemoError) { if (error.status === 401) window.dispatchEvent(new Event('session-expired')); throw new ApiError(error.message, error.status) }; throw error }
+  }
   let response: Response
   try {
     const timeout = AbortSignal.timeout(15000)

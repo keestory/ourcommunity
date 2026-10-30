@@ -21,15 +21,15 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   useEffect(() => { void refresh(); return invalidate }, [refresh, invalidate])
   useEffect(() => {
     const clear = () => { invalidate(); setCsrf(null); setSession(current => ({ ...current, user: null, csrf: null })); setLoading(false) }
-    const channel = new BroadcastChannel('ourcommunity-session')
-    channel.onmessage = clear
+    const channel = typeof BroadcastChannel === 'undefined' ? null : new BroadcastChannel('ourcommunity-session')
+    if (channel) channel.onmessage = () => void refresh()
     window.addEventListener('session-expired', clear)
-    return () => { channel.close(); window.removeEventListener('session-expired', clear) }
-  }, [invalidate])
-  const login = async (mode: string, data: unknown) => { invalidate(); await mutate(`/auth/${mode}`, data); await refresh() }
+    return () => { channel?.close(); window.removeEventListener('session-expired', clear) }
+  }, [invalidate, refresh])
+  const login = async (mode: string, data: unknown) => { invalidate(); await mutate(`/auth/${mode}`, data); await refresh(); if (typeof BroadcastChannel !== 'undefined') { const channel = new BroadcastChannel('ourcommunity-session'); channel.postMessage('role-change'); channel.close() } }
   const logout = async () => {
     invalidate(); await mutate('/auth/logout'); setCsrf(null); setSession(current => ({ ...current, user: null, csrf: null }))
-    const channel = new BroadcastChannel('ourcommunity-session'); channel.postMessage('logout'); channel.close()
+    const channel = typeof BroadcastChannel === 'undefined' ? null : new BroadcastChannel('ourcommunity-session'); channel?.postMessage('logout'); channel?.close()
   }
   return <Context.Provider value={{ session, loading, error, refresh, login, logout }}>{children}</Context.Provider>
 }

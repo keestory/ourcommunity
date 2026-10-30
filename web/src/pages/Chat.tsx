@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { CalendarDays, LockKeyhole, Megaphone, MoreHorizontal, Plus, Send } from 'lucide-react'
+import { BROWSER_DEMO } from '../demo/storage'
 import { useGroup } from '../components/Layout'
 import { Avatar, Button, Confirm, Dialog, DirtyGuard, EmptyState, ErrorState, Field, Loading, useToast } from '../components/ui'
 import { api, mutate, requestId } from '../lib/api'
@@ -42,7 +43,7 @@ export function Chat() {
     if (operation === 'delete') await mutate(`/messages/${selection.id}`, undefined, 'DELETE')
     if (operation === 'block') await mutate(`/groups/${group.id}/blocks/${selection.author.id}`)
     if (operation === 'report') { if (reason.trim().length < 2) { safety.setError('신고 이유를 2자 이상 알려 주세요.'); document.getElementById('reason')?.focus(); return }; await mutate(`/groups/${group.id}/reports`, { message_id: selection.id, reason }) }
-    toast(operation === 'report' ? '신고를 운영자에게 전달했어요.' : operation === 'block' ? '서로의 대화 메시지를 숨겼어요.' : '메시지를 삭제했어요.'); setSelection(null); setOperation(null); setReason(''); messages.refresh()
+    toast(operation === 'report' ? BROWSER_DEMO ? '이 브라우저의 시연 신고함에 기록했어요. 실제 운영자에게 전달되지 않아요.' : '신고를 운영자에게 전달했어요.' : operation === 'block' ? '서로의 대화 메시지를 숨겼어요.' : '메시지를 삭제했어요.'); setSelection(null); setOperation(null); setReason(''); messages.refresh()
   })
   const dirty = !!draft.trim() || !!announcementBody.trim() || !!reason.trim()
   if (messages.loading) return <><DirtyGuard dirty={dirty} busy={send.busy || publish.busy}/><Loading label="대화를 불러오고 있어요"/></>

@@ -68,3 +68,7 @@ npx playwright test --config playwright.preview.config.ts
 ```
 
 이미 실행 중인 검증용 체험 컨테이너에는 `PREVIEW_TEST_EXTERNAL=1 PREVIEW_TEST_ORIGIN=http://127.0.0.1:8088`을 지정합니다. 이 테스트는 해당 체험 공간에 가상 메시지·신청·출석을 기록합니다.
+
+### Supabase 없는 브라우저 체험
+
+`npm --prefix web ci` 후 `npm --prefix web run build:demo`와 `npm --prefix web run preview:demo`를 실행하면 `http://127.0.0.1:4174`에서 열 수 있습니다. Python이나 환경변수가 필요 없습니다. 가상 데이터는 이 브라우저 안에만 저장되며 실제 회원 간 채팅·로그인·클라우드 동기화는 연결되지 않습니다. [체험 흐름과 정적 배포 설정](docs/implementation/browser-demo.md)을 확인하세요.

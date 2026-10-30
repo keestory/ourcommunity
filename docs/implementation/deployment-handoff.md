@@ -1,5 +1,7 @@
 # 승인된 배포 실행 인계
 
+> **보류됨 (2026-10-30):** 사용자의 “supabase 없이 일단 줘” 요청에 따라 아래 DB 연결 절차는 실행하지 않는다. 현재 배포는 [브라우저 단독 정적 체험](browser-demo.md)을 따른다.
+
 승인 근거: 2026-10-30 01:00 UTC 사용자의 “ㅇㅇ”. 대상은 Supabase `vgabkqvxotfmofhaijwz`의 ourcommunity 전용 영역과 Vercel Hobby 팀 `team_jr2EoWExoCNDX3AFRs9fZxKh`의 체험 배포다. public/Auth/다른 앱 데이터 변경, service_role, 추가 결제, main 병합은 제외한다.
 
 이 실행 환경에는 Supabase/Vercel connector가 없다. 관리 작업의 connector가 아래 순서를 실행하고, 비밀정보를 제외한 결과·배포 URL/revision을 이 작업에 전달한다. 스키마·환경변수·배포의 실제 실행 상태는 도구 결과를 받은 후에만 갱신한다.

@@ -59,3 +59,9 @@ Target WCAG 2.2 AA, automated axe plus keyboard/contrast/mobile/reduced-motion c
 ## Evidence
 
 Backend tests: tests/test_community*.py. Browser workflow and accessibility evidence: web/tests/*.spec.ts. Final screenshots and test report: docs/implementation/. These paths must be populated by actual executed checks before declaring implementation complete.
+
+## Browser-only demo variant (2026-10-30)
+
+Source: explicit user request “supabase 없이 일단 줘”; [browser demo contract](docs/implementation/browser-demo.md). The existing backend behavior above remains unchanged. `build:demo` is a separate static variant: HTTP is replaced by the shared demo adapter and committed IndexedDB transactions. It is a synthetic single-browser simulation, not server authentication or multi-user messaging. The global `BrowserDemoTools` banner names this boundary on auth, normal and error routes; no one-hour/server-reset claim applies to this variant.
+
+The canonical Button/Confirm handles local reset, with safe dismissal/Escape and explicit irreversible reset wording. Quota/write failure keeps input and committed state for retry. Unavailable IndexedDB falls back to page memory with a persistent warning; corrupt/unsupported state exposes reset without silently replacing records. Multiple tabs serialize mutations through IndexedDB; role changes refresh peer sessions. Other browsers/origins have independent samples. These are local-only synthetic records, never queued for later cloud upload. Existing no-persistent-private-draft policy remains; only explicitly submitted demo data is stored. Reports explicitly say they stay in this browser. Recent activity stays suppressed; the scene grows from sample attendance and supports corrections.

@@ -10,7 +10,10 @@
     "typecheck": "tsc --noEmit",
     "build": "npm run tokens:check && tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "dev:demo": "vite --config vite.demo.config.ts",
+    "build:demo": "tsc --noEmit && vite build --config vite.demo.config.ts",
+    "preview:demo": "vite preview --config vite.demo.config.ts"
   },
   "keywords": [],
   "author": "",

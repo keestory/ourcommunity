@@ -21,3 +21,11 @@ fieldset{border:0;padding:0;margin:0;min-width:0}html{scroll-padding-bottom:110p
 @media(max-width:359px){.mobile-brand{font-size:17px;gap:4px;white-space:nowrap}.mobile-brand svg{width:16px}.topbar{padding:0 10px}.topbar-actions .icon-button{min-width:38px;width:38px}.demo-label{max-width:50px;font-size:8px;margin:0}.topbar-actions{gap:0}.setting-row{align-items:flex-start;flex-direction:column}.setting-row .button{align-self:flex-start}.memory-miniatures>div{width:82px}.scene-period{display:none}}
 
 .preview-note{margin:0 0 20px;font-size:11px;line-height:1.8;color:var(--color-muted)}
+
+.browser-demo-tools { position: relative; z-index: 2; display: flex; align-items: center; gap: var(--space-field); padding: 12px max(18px, env(safe-area-inset-left)); background: var(--color-meadow); border-bottom: 1px solid var(--color-border); color: var(--color-ink); }
+.browser-demo-tools div { flex: 1; min-width: 0; }
+.browser-demo-tools strong { font-size: 13px; }
+.browser-demo-tools p { font-size: 12px; margin: 3px 0; }
+.browser-demo-tools > button { flex-shrink: 0; }
+@media (max-width: 600px) { .browser-demo-tools { align-items: flex-start; flex-wrap: wrap; } .browser-demo-tools > div { flex-basis: 100%; } }
+@media (min-width: 900px) { body:has(.app-shell) .browser-demo-tools { margin-left: 232px; } }
