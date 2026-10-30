@@ -4,7 +4,7 @@ import { persistentStorage, transact } from './storage'
 import type { Group, MessagePage, Session } from '../lib/types'
 function text(value: unknown, max = 2000) { if (typeof value !== 'string' || !value.trim() || value.trim().length > max) throw new DemoError('입력 내용과 길이를 확인해 주세요.'); return value.trim() }
 function operator(s: DemoState) { if (!staff(s.persona)) throw new DemoError('운영자 역할에서 할 수 있어요.', 403) }
-function group(s: DemoState): Group { return { id: 'hangang', name: '한강 새벽 러너스', description: '각자의 속도로 달리고, 같은 마음으로 쉬어요.', subtitle: '강바람 따라, 함께 쌓이는 아침', role: staff(s.persona) ? 'owner' : 'member', member_count: s.members.length, public_space: false, palette: s.palette, version: s.groupVersion, preferences: s.preferences[s.persona!] ?? { muted: false, activity_consent: false } } }
+function group(s: DemoState): Group { return { space_layout: s.space_layout, id: 'hangang', name: '한강 새벽 러너스', description: '각자의 속도로 달리고, 같은 마음으로 쉬어요.', subtitle: '강바람 따라, 함께 쌓이는 아침', role: staff(s.persona) ? 'owner' : 'member', member_count: s.members.length, public_space: false, palette: s.palette, version: s.groupVersion, preferences: s.preferences[s.persona!] ?? { muted: false, activity_consent: false } } }
 function dispatch(s: DemoState, path: string, method: string, body: Record<string, unknown>) {
   const url = new URL(path, 'https://browser-demo.invalid'), parts = url.pathname.split('/').filter(Boolean), id = s.persona
   if (path === '/session') return { user: id ? person(id) : null, csrf: null, demo: true, preview: { enabled: true, isolated: true, persistent: persistentStorage(), restart_resets: false, storage: 'browser', expires_at: null, ttl_seconds: 0, mutation_limit: 0, sharing_enabled: false } } satisfies Session
@@ -44,6 +44,20 @@ function dispatch(s: DemoState, path: string, method: string, body: Record<strin
   if (parts.length === 2 && method === 'GET') return group(s)
   switch (parts[2]) {
     case 'growth': return growth(s)
+    case 'space': {
+      if (method !== 'PATCH') throw new DemoError('지원하지 않는 공간 요청이에요.', 405)
+      operator(s)
+      const asset = growth(s).assets.find(a => a.id === body.asset_id)
+      if (!asset?.unlocked) throw new DemoError('함께 만든 기념물만 배치할 수 있어요.', 403)
+      if (body.version !== s.groupVersion) throw new DemoError('다른 탭에서 공간이 바뀌었어요. 새로고침 후 다시 선택해 주세요.', 409)
+      if (!['entry', 'center', 'garden'].includes(String(body.slot))) throw new DemoError('배치할 자리를 선택해 주세요.')
+      const layout = { 'trail-sign': 'entry', bench: 'center', 'memory-tree': 'garden', ...s.space_layout } as NonNullable<Group['space_layout']>
+      const slot = body.slot as typeof layout[string], previous = layout[asset.id]
+      const occupied = Object.keys(layout).find(key => key !== asset.id && layout[key] === slot)
+      if (occupied) layout[occupied] = previous
+      layout[asset.id] = slot; s.space_layout = layout; s.groupVersion++
+      audit(s, `${asset.name} 배치 변경 · 시연`, asset.id); return group(s)
+    }
     case 'members':
       if (method === 'DELETE') {
         operator(s); if (parts[3] === 'mira') throw new DemoError('소유자는 내보낼 수 없어요.')

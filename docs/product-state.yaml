@@ -14,9 +14,9 @@ status:
   - 1
   - 2
   gate_verdict: blocked
-  review_level: L2 browser-only demo implementation and static deployment preparation
+  review_level: L2 Clubroom redesign; local browser QA and independent review
   review_verdict: pass
-  task_grade: S3 제품 / Supabase 없는 브라우저 단독 체험 배포
+  task_grade: S2 UI 리디자인 / 기존 브라우저 체험 보존
   primary_industry: community
   secondary_industries:
   - o2o-reservation
@@ -27,18 +27,18 @@ status:
   - design-intelligence
   - quality-assurance
   - privacy
-  task_scope: 브라우저 저장소만 사용하는 정적 preview 배포; Supabase 설정 보류, 기존 서버 보존, main 병합·과금·권한 확대 제외
+  task_scope: 과거 디자인 근거 복구 및 대화·모임·공동 공간 리디자인; 기존 IndexedDB/서버 보존, 기능 브랜치 게시, 공개 배포는 부모 인계
   discoverability: required
   store_compliance: not-applicable
   store_compliance_reason: 로컬 브라우저 제품이며 모바일 스토어 제출 없음; 네이티브 선택 시 재판정
-  competitive_benchmark: not-applicable
+  competitive_benchmark: required
   updated_at: '2026-10-30'
   timezone: Asia/Seoul
-  discoverability_reason: 기존 프리뷰 Host/Origin·noindex 계약 유지; FastAPI 기본 라우팅의 로컬 패키징 확인, Vercel 공개 URL 검증 전
+  discoverability_reason: 기존 URL·라우트·noindex/CSP 계약 유지; 리디자인 공개 배포 및 실제 iPhone 확인은 별도
   local_implementation_verdict: pass
-  competitive_benchmark_reason: 이번 변경은 기존 제품의 격리 체험·호스팅 준비이며 신규 경쟁/시장 판단 없음; 기존 패턴 근거 보존
+  competitive_benchmark_reason: 사용자 과거 리서치와 실제 공개 audit 회수; 공식 기능 패턴 전달과 직접 접근403·미관찰 화면을 구분해 references.md에 기록
   preview_container_verdict: pass; PostgreSQL image rebuilt, non-root/read-only local API smoke passed
-  public_deployment_verdict: blocked
+  public_deployment_verdict: baseline 2c79fea READY verified by parent; redesign awaits parent deployment; child public QA blocked by execution-network restrictions
   postgres_local_verdict: pass
   external_connection_approval: approved 2026-10-30 01:00 UTC
 evidence:
@@ -123,7 +123,7 @@ execution:
   code_changes: true
   commit_created: true
   remote_push: true
-  deployed: false
+  deployed: true
   external_contact: false
   publication:
     branch: feat/sports-community-prototype
@@ -133,8 +133,12 @@ execution:
     main_changed: false
     last_verified_remote_sha: d956de9c08b9cd7c73102d8af3dfbebc5575574f
   preview:
-    public_url: null
-    deployment_revision: null
+    public_url: https://ourcommunity-demo.vercel.app
+    deployment_revision: 2c79feace2fedae0b9ea86082ada87b205e0eee8
+    deployment_target: production in separate new ourcommunity-demo project
+    deployment_id: dpl_571hPuoG3cb1uTiQVs5oJzccmMND
+    deployment_status: READY and aliasError null verified by parent connector; public functional QA network-blocked
+    deployment_check: docs/implementation/browser-demo-deployment-check.json
     runtime: browser-only static demo candidate; existing Python/SQLite/PostgreSQL modes preserved
     local_image: sha256:df48d5c551bf2338cd76912991223e1acb448e528dcec8c03892100a5bd1a2be
     report: docs/implementation/preview-deployment.md
@@ -152,12 +156,13 @@ execution:
       report: docs/implementation/postgres-preview.md
     local_image_revision: 1257527 plus canonical requirements and FastAPI configuration changes in this commit
 quality:
-  report: docs/implementation/browser-demo.md
+  report: docs/design-docs/ourcommunity-redesign/README.md
   acceptance_evidence:
   - 기존 준비 문서 L1 결과는 보존; 구현 검증은 별도 기록
   - 독립 백엔드/프런트 검토 및 수정 후 재검증 완료
   - strict UI audit 오류·경고 0; 토큰/문서 링크/YAML/공백 검사 Pass
   tests:
+  - 리디자인 최종 데모13 passed(기존8+신규5), 서버 연결10 passed(기존9+갱신실패1); lint/typecheck/tokens/두build/strict audit Pass
   - '브라우저 단독 체험8 passed; 서버 연결 모드 브라우저9 passed, API 호출0 및 저장 실패/동시 탭/초기화 검증'
   - '브라우저 체험 lint/typecheck/tokens/build 및 기존 웹 build Pass; strict UI audit 오류0·경고0'
   - 'Python97 passed: 기준79 + PostgreSQL 관련18(실제 로컬DB11/설정7)'
@@ -175,6 +180,11 @@ quality:
   - PostgreSQL 만료는 접근 차단이며 물리회수는 다음 guest 생성 시; 백업 보관·엄격 삭제 시한 미확정
   - 기존 프로젝트 PUBLIC 권한 검사에서 전용 영역 한정 조건 미충족 확인; 권한 변경 없이 Supabase 작업 보류
 artifacts:
+- docs/design-docs/ourcommunity-redesign/README.md
+- docs/design-docs/ourcommunity-redesign/references.md
+- docs/design-docs/ourcommunity-redesign/patterns.md
+- docs/design-docs/ourcommunity-redesign/verification.json
+- docs/implementation/browser-demo-deployment-check.json
 - docs/implementation/browser-demo-audit.json
 - docs/implementation/screenshots/browser-demo-mobile.png
 - docs/implementation/screenshots/browser-demo-desktop.png

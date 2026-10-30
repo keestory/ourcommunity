@@ -24,7 +24,7 @@
 |---|---|
 | 팀 | `team_jr2EoWExoCNDX3AFRs9fZxKh` (기존 Hobby) |
 | 저장소 / 브랜치 | `keestory/ourcommunity` / `feat/sports-community-prototype` |
-| 배포 종류 | static **preview**, main 병합 없음 |
+| 배포 종류 | 별도 `ourcommunity-demo` 프로젝트의 정적 **production 체험**, main 병합 없음 |
 | rootDirectory | `web` |
 | framework | `vite` |
 | installCommand | `npm ci` |
@@ -53,4 +53,19 @@
 
 공개 배포 후 `DEMO_TEST_ORIGIN=https://<확인된-host> npx playwright test --config playwright.demo.config.ts`로 같은 검증을 이어간다. 테스트는 이 origin의 브라우저 저장소 안에만 합성 데이터를 쓴다. 데스크톱 Chromium의 모바일 viewport는 실제 iPhone Safari 검증이 아니다. 네트워크가 끊긴 상태의 첫 로딩/새로고침을 보장하는 service worker/PWA는 구현하지 않는다.
 
-현재 공개 URL과 배포 revision은 **미확인**이다. 로컬 통과를 공개 배포 성공으로 기록하지 않는다.
+## 외부 배포 생성과 검증 시도 (2026-10-30)
+
+관리 작업의 Vercel connector가 별도 `ourcommunity-demo` 프로젝트(`prj_0aK3ZL9IqOuz62EdvNgvXDQr2zDA`)에 배포 `dpl_571hPuoG3cb1uTiQVs5oJzccmMND`를 생성했다. 소스 SHA는 `2c79feace2fedae0b9ea86082ada87b205e0eee8`이다. 새 프로젝트의 첫 배포여서 도구가 **production**으로 반환했으며 기존 서비스 덮어쓰기는 없다고 전달받았다. 초기 preview 계획과 실제 생성 target을 구분해 위 설정표를 갱신했다.
+
+- 배포 URL: https://ourcommunity-demo-ab5xnvkdz-keestory91-6294s-projects.vercel.app
+- 별칭: https://ourcommunity-demo-keestory91-6294s-projects.vercel.app
+- 마지막 전달 상태: **READY**, 정확한 deployment/SHA와 `aliasError=null`을 관리 작업 Vercel connector에서 확인했다.
+- 짧은 공식 주소: https://ourcommunity-demo.vercel.app
+
+이 환경의 기존 프록시를 통한 두 주소 접근은 연결 단계에서 `Tunnel connection failed: 403 Forbidden`으로 차단됐다. 기존 Playwright 공개 QA도 `/demo-build.json`의 DNS 조회에서 `EAI_AGAIN`으로 첫 beforeEach가 실패해 나머지 7개를 실행하지 못했다. 앱 화면이나 앱 HTTP 오류를 확인한 것이 아니다. 네트워크 정책·프록시·인증 설정을 바꾸거나 우회하지 않았다.
+
+[실행 기록](browser-demo-deployment-check.json). 공개 화면/저장/재열기/API 호출 0 검증은 **미완료**이며, 위 8개 통과는 로컬 결과다. 짧은 공식 주소도 기존 프록시 403, Playwright 요청의 DNS EAI_AGAIN, 실제 Chromium 탐색의 `net::ERR_TUNNEL_CONNECTION_FAILED`로 접근하지 못했다. 앱 화면은 렌더되지 않았다. READY/alias 확인과 별개로 접근 가능한 브라우저 환경에서 같은 공개 QA를 이어가야 한다.
+
+## UI 리디자인 후속
+
+2026-10-30 사용자 피드백에 따른 [클럽룸 리디자인 구현·검증](../design-docs/ourcommunity-redesign/README.md). 브라우저 저장소 이름/버전1과 기존 데이터는 유지하며 선택적인 기념물 배치만 추가했다. 운영자로 획득한 기념물을 선택하고 입구/쉼터/정원으로 이동한 뒤 새로고침해 확인할 수 있다. 새 배포 완료 여부는 해당 기록과 최종 SHA 인계에서 구분한다. 위 8+9 결과는 최초 데모 기준이며 리디자인의 추가 검증과 혼합하지 않는다.

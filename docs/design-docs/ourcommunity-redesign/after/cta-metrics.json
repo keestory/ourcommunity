@@ -1,0 +1,16 @@
+{
+  "mobile_390x844": {
+    "home_rsvp": {
+      "y": 669.21875,
+      "height": 44
+    },
+    "navigation_top": 778
+  },
+  "desktop_1180x757": {
+    "home_rsvp": {
+      "y": 423.125,
+      "height": 44
+    }
+  },
+  "note": "Fresh local Chromium render, synthetic data, no scroll."
+}

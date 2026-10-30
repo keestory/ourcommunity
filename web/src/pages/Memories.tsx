@@ -1,14 +1,16 @@
-import { Flag, Leaf, LockKeyhole, Sprout } from 'lucide-react'
+import { Check, LockKeyhole, ArrowUpRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { BROWSER_DEMO } from '../demo/storage'
 import { useGroup } from '../components/Layout'
-import { Clubhouse } from '../components/Clubhouse'
+import { SharedSpace, AssetIcon } from '../components/SharedSpace'
 import { ErrorState, Loading } from '../components/ui'
 import { useResource, useTitle } from '../lib/hooks'
-import type { Growth } from '../lib/types'
+import type { EventItem, Growth, List } from '../lib/types'
 export function Memories() {
   useTitle('함께한 기록')
-  const { group } = useGroup(), growth = useResource<Growth>(`/groups/${group.id}/growth`, true)
+  const { group, refreshGroup } = useGroup(), growth = useResource<Growth>(`/groups/${group.id}/growth`, true), events = useResource<List<EventItem>>(`/groups/${group.id}/events`)
   if (growth.loading) return <Loading/>
   if (!growth.data) return <ErrorState message={growth.error} retry={growth.refresh}/>
-  const icons = [Flag, Leaf, Sprout]
-  return <><div className="page-heading"><div><p className="eyebrow">함께한 시간의 모양</p><h1>우리의 작은 기념물<span className="heading-dot">.</span></h1><p>빨리 달려서가 아니라, 함께해서 생긴 것들.</p></div></div>{growth.error && <ErrorState compact message={growth.error} retry={growth.refresh}/>}<div className="memories-intro"><Clubhouse compact assets={growth.data.assets.filter(asset => asset.unlocked).map(asset => asset.id)} recent={growth.data.recent} palette={group.palette}/><div><Sprout size={30}/><h2>쉬는 날에도<br/> 추억은 그대로예요.</h2><p>{growth.data.rule}</p><small>출석을 잘못 확인했다면 운영자가 고칠 수 있고, 그때 공동 기록도 다시 반영돼요.</small></div></div><section className="asset-list" aria-label="공동 기념물">{growth.data.assets.map((asset,index) => { const Icon = icons[index]; return <article key={asset.id} className={`asset-item ${asset.unlocked ? 'earned' : ''}`}><div className="asset-illustration"><Icon size={46}/></div><p className="eyebrow">{asset.unlocked ? '우리 공간에 함께' : '다음에 함께 만들어요'}</p><h2>{asset.name}</h2><p>{asset.description}</p><div className="asset-progress"><progress value={asset.progress} max={asset.goal} aria-label={`${asset.name} 공동 참여 기록`}/><small>{asset.progress} / {asset.goal}번의 확인된 참여</small></div></article> })}</section><p className="privacy-note"><LockKeyhole size={18}/>개인 순위나 금전 가치가 없는 공동 기념물이에요. 메시지 수, 속도, 운동량으로 보상하지 않아요.</p></>
+  const past = events.data?.items.find(e => e.can_mark_attendance && e.status === 'published')
+  return <><div className="page-heading"><div><p className="eyebrow">함께한 기록</p><h1>함께 만든 공간</h1><p>{BROWSER_DEMO ? '기념물을 눌러 살펴보세요. 운영자는 만든 기념물의 위치를 바꿀 수 있어요.' : '함께 만든 기념물을 살펴보고, 다음 모임에서 기록을 이어가세요.'}</p></div>{past && <Link className="button secondary" to={`/groups/${group.id}/events/${past.id}`}>출석 확인 <ArrowUpRight size={17}/></Link>}</div>{growth.error && <ErrorState compact message={growth.error} retry={growth.refresh}/>}<div className="growth-workspace"><SharedSpace group={group} growth={growth.data} editable refresh={refreshGroup}/><section className="asset-list" aria-label="공동 기념물">{growth.data.assets.map(asset => <article key={asset.id} className={`asset-item ${asset.unlocked ? 'earned' : ''}`}><div className="asset-illustration"><AssetIcon id={asset.id} size={28}/></div><div className="asset-description"><p className="eyebrow">{asset.unlocked ? <><Check size={13}/>우리 공간에 함께</> : '다음에 함께 만들어요'}</p><h2>{asset.name}</h2><p>{asset.description}</p><div className="asset-progress"><progress value={asset.progress} max={asset.goal} aria-label={`${asset.name} 공동 참여 기록`}/><small>{asset.progress} / {asset.goal}번의 확인된 참여</small></div></div></article>)}</section></div><div className="growth-notes"><p><LockKeyhole size={16}/>메시지 수나 개인 순위로 보상하지 않아요. 쉬어도 기념물은 남고, 잘못 확인한 출석은 정정할 수 있어요.</p><p>최근 활기: {growth.data.recent.visible ? growth.data.recent.label : '집계를 공개하지 않아요.'} 대화 원문이나 개인 접속 상태는 이 공간에 표시하지 않아요.</p></div></>
 }

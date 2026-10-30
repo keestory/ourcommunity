@@ -1,6 +1,7 @@
 import type { Announcement, Attendance, Group, Message, NotificationItem, User } from '../lib/types'
 export type DemoEvent = { id: number; title: string; description: string; location: string; starts_at: string; ends_at: string; capacity: number; status: 'published' | 'cancelled'; version: number; attendees: (Attendance & { offer_expires_at?: string })[] }
 export type DemoState = {
+  space_layout?: Group['space_layout'];
   version: 1; persona: string | null; nextId: number; palette: Group['palette']; groupVersion: number;
   members: string[]; preferences: Record<string, Group['preferences']>; messages: Message[];
   announcements: Announcement[]; events: DemoEvent[]; blocks: Record<string, string[]>;

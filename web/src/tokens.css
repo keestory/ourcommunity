@@ -1,21 +1,21 @@
 /* Generated from DESIGN.md. Run npm run tokens; do not edit. */
 :root {
-  --color-primary: #28594F;
-  --color-ink: #203D3B;
-  --color-muted: #5D716C;
-  --color-background: #F3F6F2;
+  --color-primary: #2448C8;
+  --color-ink: #18232B;
+  --color-muted: #596672;
+  --color-background: #F4F6F8;
   --color-surface: #FFFFFF;
-  --color-border: #DCE5DD;
-  --color-meadow: #E2EDCF;
-  --color-sky: #E9F1EE;
-  --color-clay: #AC603D;
-  --color-danger: #AB3D32;
-  --color-focus: #23645A;
+  --color-border: #D5DCE2;
+  --color-meadow: #E5EBCD;
+  --color-sky: #EAF0FF;
+  --color-clay: #A95636;
+  --color-danger: #A72C34;
+  --color-focus: #1649D8;
   --font-body: "Noto Sans KR Variable", "Apple SD Gothic Neo", sans-serif;
   --font-display: "Outfit Variable", "Noto Sans KR Variable", sans-serif;
-  --radius-control: 0.75rem;
-  --radius-panel: 1.25rem;
-  --radius-dialog: 1.5rem;
+  --radius-control: 0.5rem;
+  --radius-panel: 0.75rem;
+  --radius-dialog: 1rem;
   --space-field: 1rem;
   --space-section: 2rem;
   --space-page: 2.5rem;

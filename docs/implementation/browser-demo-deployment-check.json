@@ -1,0 +1,48 @@
+{
+  "checked_at": "2026-10-30",
+  "source_commit": "2c79feace2fedae0b9ea86082ada87b205e0eee8",
+  "deployment_id": "dpl_571hPuoG3cb1uTiQVs5oJzccmMND",
+  "project_id": "prj_0aK3ZL9IqOuz62EdvNgvXDQr2zDA",
+  "project_name": "ourcommunity-demo",
+  "deployment_target": "production",
+  "deployment_target_source": "parent connector result; separate new demo project",
+  "last_status_reported_by_parent": "READY",
+  "url": "https://ourcommunity-demo-ab5xnvkdz-keestory91-6294s-projects.vercel.app",
+  "alias": "https://ourcommunity-demo-keestory91-6294s-projects.vercel.app",
+  "external_qa": "blocked before application response",
+  "network_checks": [
+    {
+      "client": "Python urllib with existing proxy",
+      "target": "deployment URL and alias",
+      "result": "Tunnel connection failed: 403 Forbidden"
+    },
+    {
+      "client": "existing Playwright demo config",
+      "target": "deployment URL /demo-build.json",
+      "result": "getaddrinfo EAI_AGAIN; beforeEach failed; 7 remaining tests not run"
+    },
+    {
+      "client": "Python urllib with existing proxy",
+      "target": "short alias /demo-build.json and /groups/hangang/chat",
+      "result": "Tunnel connection failed: 403 Forbidden"
+    },
+    {
+      "client": "existing Playwright demo config",
+      "target": "short alias /demo-build.json",
+      "result": "getaddrinfo EAI_AGAIN; beforeEach failed; 7 remaining tests not run"
+    },
+    {
+      "client": "actual Chromium page.goto with existing environment",
+      "target": "https://ourcommunity-demo.vercel.app/",
+      "result": "net::ERR_TUNNEL_CONNECTION_FAILED; no app screen rendered"
+    }
+  ],
+  "public_ui_rendered": false,
+  "public_functional_checks_passed": 0,
+  "local_demo_tests_previously_passed": 8,
+  "backend_browser_regression_previously_passed": 9,
+  "network_policy_changed": false,
+  "next_step": "READY and aliases verified by parent connector; public functional QA still requires a supported network/browser.",
+  "alias_error_reported_by_parent": null,
+  "short_alias": "https://ourcommunity-demo.vercel.app"
+}

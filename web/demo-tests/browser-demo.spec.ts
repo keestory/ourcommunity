@@ -5,7 +5,7 @@ test.beforeEach(async ({ request }) => {
   expect(marker.ok()).toBeTruthy()
   expect(await marker.json()).toMatchObject({ mode: 'browser-only-demo', api: false })
 })
-async function member(page: Page, path = '/groups/hangang/chat') { await page.goto(path); await page.getByRole('button', { name: '멤버로 둘러보기' }).click(); await expect(page.getByRole('heading', { name: '오늘의 이야기를 나눠요.' })).toBeVisible() }
+async function member(page: Page, path = '/groups/hangang/chat') { await page.goto(path); await page.getByRole('button', { name: '멤버로 둘러보기' }).click(); await expect(page.getByRole('heading', { name: '크루 대화' })).toBeVisible() }
 async function owner(page: Page) { await page.getByRole('button', { name: '계정과 로그아웃' }).click(); await page.getByRole('button', { name: '역할 다시 선택' }).click(); await page.getByRole('button', { name: '운영자로 둘러보기' }).click(); await expect(page.getByRole('button', { name: '계정과 로그아웃' })).toBeVisible() }
 async function send(page: Page, message: string) { await page.getByRole('textbox', { name: '메시지', exact: true }).fill(message); await page.getByRole('button', { name: '메시지 보내기' }).click(); await expect(page.getByText(message, { exact: true })).toBeVisible() }
 
@@ -73,7 +73,7 @@ test('create/cancel event, announcement, member boundary, unsaved back navigatio
   await owner(page); await page.goto('/groups/hangang/events/new'); await page.getByLabel('모임 이름', { exact: true }).fill('작성 중인 시연 모임'); await page.getByRole('button', { name: '취소', exact: true }).click(); await expect(page.getByRole('dialog')).toContainText('작성 중인 내용'); await page.getByRole('button', { name: '돌아가기', exact: true }).click(); await expect(page.getByLabel('모임 이름', { exact: true })).toHaveValue('작성 중인 시연 모임')
   await page.getByLabel('만날 장소', { exact: true }).fill('시연 공원'); await page.getByRole('button', { name: '모임 만들기', exact: true }).click(); await expect(page.getByRole('heading', { name: '작성 중인 시연 모임' })).toBeVisible()
   await page.getByRole('button', { name: '모임 전체 취소' }).click(); await page.getByRole('button', { name: '모임 취소', exact: true }).click(); await expect(page.getByText('운영자가 취소한 모임이에요.')).toBeVisible()
-  await page.goto('/groups/hangang/chat'); await page.getByRole('button', { name: '공지 올리기', exact: true }).click(); await page.getByLabel('공지 내용').fill('브라우저 안의 시연 공지'); await page.getByRole('dialog').getByRole('button', { name: '공지 올리기', exact: true }).click(); await expect(page.getByText('브라우저 안의 시연 공지', { exact: true })).toBeVisible()
+  await page.goto('/groups/hangang/chat'); await page.getByRole('button', { name: '공지', exact: true }).click(); await page.getByRole('dialog').getByRole('button', { name: '공지 올리기', exact: true }).click(); await page.getByLabel('공지 내용').fill('브라우저 안의 시연 공지'); await page.getByRole('dialog').getByRole('button', { name: '공지 올리기', exact: true }).click(); await expect(page.getByRole('dialog')).not.toBeVisible(); await page.getByRole('button', { name: '공지', exact: true }).click(); await expect(page.getByRole('dialog').getByText('브라우저 안의 시연 공지', { exact: true })).toBeVisible(); await page.keyboard.press('Escape')
   await page.goto('/groups/seongsu/chat'); await expect(page.getByRole('alert')).toContainText('접근할 수 없어요')
 })
 
@@ -92,7 +92,7 @@ test('waitlist promotes after member removal and requires explicit acceptance', 
 
 test('two tabs commit without dropping messages and share reset', async ({ page, context }) => {
   await member(page)
-  const second = await context.newPage(); await second.goto('/groups/hangang/chat'); await expect(second.getByRole('heading', { name: '오늘의 이야기를 나눠요.' })).toBeVisible()
+  const second = await context.newPage(); await second.goto('/groups/hangang/chat'); await expect(second.getByRole('heading', { name: '크루 대화' })).toBeVisible()
   await Promise.all([send(page, '첫 탭의 시연 메시지'), send(second, '둘째 탭의 시연 메시지')])
   await page.reload(); await expect(page.getByText('첫 탭의 시연 메시지', { exact: true })).toBeVisible(); await expect(page.getByText('둘째 탭의 시연 메시지', { exact: true })).toBeVisible()
   await second.getByRole('button', { name: '체험 초기화', exact: true }).click(); await second.getByRole('button', { name: '기록 지우고 다시 시작' }).click(); await page.reload(); await expect(page.getByRole('button', { name: '멤버로 둘러보기' })).toBeVisible(); await second.close()

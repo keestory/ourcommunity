@@ -1,6 +1,7 @@
 export type User = { id: string; username: string; display_name: string; color: string }
 export type Session = { user: User | null; csrf: string | null; demo: boolean; preview?: { enabled: boolean; isolated: boolean; persistent: boolean; restart_resets?: boolean; storage?: string; expires_at: string | null; ttl_seconds: number; mutation_limit: number; sharing_enabled: boolean } }
-export type Group = { id: string; name: string; description: string; subtitle: string; role: 'owner' | 'organizer' | 'member'; member_count: number; public_space: boolean; palette: 'dawn' | 'forest' | 'sunset'; version: number; preferences: { muted: boolean; activity_consent: boolean } }
+export type SpaceSlot = 'entry' | 'center' | 'garden'
+export type Group = { space_layout?: Record<string, SpaceSlot>; id: string; name: string; description: string; subtitle: string; role: 'owner' | 'organizer' | 'member'; member_count: number; public_space: boolean; palette: 'dawn' | 'forest' | 'sunset'; version: number; preferences: { muted: boolean; activity_consent: boolean } }
 export type Member = Pick<User, 'id' | 'display_name' | 'color'> & { role: string }
 export type Message = { id: number; seq: number; client_id: string; body: string; author: Pick<User,'id' | 'display_name' | 'color'>; created_at: string; deleted: boolean; mine: boolean }
 export type MessagePage = { items: Message[]; next_cursor: number; has_more: boolean; read_seq: number; unread_count: number }

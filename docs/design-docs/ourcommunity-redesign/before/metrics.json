@@ -1,0 +1,40 @@
+{
+  "sha": "2c79feace2fedae0b9ea86082ada87b205e0eee8",
+  "source": "local built demo",
+  "metrics": [
+    {
+      "name": "desktop",
+      "width": 1180,
+      "height": 757,
+      "composer": {
+        "x": 279,
+        "y": 844.765625,
+        "width": 548,
+        "height": 64
+      },
+      "send": {
+        "x": 835,
+        "y": 844.765625,
+        "width": 45,
+        "height": 64
+      }
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "composer": {
+        "x": 33,
+        "y": 805.015625,
+        "width": 261,
+        "height": 70
+      },
+      "send": {
+        "x": 302,
+        "y": 805.015625,
+        "width": 45,
+        "height": 70
+      }
+    }
+  ]
+}
