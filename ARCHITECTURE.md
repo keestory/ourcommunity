@@ -63,3 +63,9 @@ web/ (React + TypeScript + Vite)
 `DESIGN.md`가 화면 토큰의 원본이고 `UX-CONTRACT.md`가 공통 컴포넌트·탐색·오류·권한 동작을 정의한다. 화면은 API 성공 이후 상태를 갱신하며 서버 권한 검사를 대체하지 않는다. 채팅은 폴링으로 갱신한다. 원래 하네스 런타임과 소비자 앱은 import나 데이터베이스를 공유하지 않는다.
 
 실행과 한계는 [`README.md`](./README.md), 설계 가정과 검증 상태는 [`로컬 제품 기록`](./docs/implementation/local-product.md)을 따른다. 배포·실제 사용자 데이터·보관 정책·계정 삭제는 별도 준비가 필요하다.
+
+## 격리된 체험 모드
+
+`PREVIEW_MODE=1`은 `preview_boundary.py`에서 정확한 Host/Origin, 본문 크기, 보안 헤더, 체험용 API 제한을 검사한다. `preview_store.py`는 서버 발급 cookie의 해시를 방문자별 임시 SQLite 경로에 연결하고 수명·요청·작성 한도를 관리한다. 요청의 `state.db_path`만 `database.transaction`으로 전달하며 로컬 개발 DB를 열지 않는다. 기존 리소스별 권한과 CSRF 검사는 그대로 실행한다.
+
+`Dockerfile`은 `web/dist`와 FastAPI를 같은 origin에서 비루트 사용자로 실행한다. 한 프로세스·한 worker·한 인스턴스 전용이며 데이터는 기본 1시간 또는 프로세스 종료까지다. registry가 메모리에 있으므로 Vercel 함수의 콜드스타트·다중 인스턴스에 적합하지 않다. 공유 저장소와 세션 경계를 재설계하기 전에는 서버리스 배포 설정을 추가하지 않는다. [실제 검증과 호스팅 조건](./docs/implementation/preview-deployment.md)을 따른다.

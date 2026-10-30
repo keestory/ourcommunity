@@ -11,6 +11,7 @@ Scope: local first product authorized by the user's 2026-10-29 request to contin
 | Collective nonmonetary assets, no message rewards | docs/product-specs/ourcommunity/shared-growth.md | Growth from verified participation, no personal rank/decay; corrections remain auditable |
 | Coarse optional activity, small-group protection | docs/product-specs/ourcommunity/activity-patterns.md | Public default off; personal consent separate; no exact people/message/online numbers |
 | Local-only implementation and conservative privacy assumptions | docs/implementation/local-product.md | Demo visibly labeled; no real personal data; production policies remain unresolved |
+| Isolated preview deployment variant | docs/implementation/preview-deployment.md; preview API metadata | Synthetic roles only; credential entry and external sharing unavailable; first-visit one-hour expiry or restart resets data |
 | Billing/legal commitments | Not part of this implementation | No purchase, terms acceptance, external messages or third-party sign-in buttons |
 
 ## Canonical UI Map
@@ -31,6 +32,7 @@ No data table bulk selection is implemented; table-selection ownership is not ap
 | Operation | Pending and result | Failure and navigation |
 |---|---|---|
 | Login/register/demo login | Disable duplicate; fetch session/CSRF; return to safe internal original path | Generic credentials error, preserve username, no password URL/storage |
+| Preview role selection | Existing demo controls; keep the visitor space when switching roles | Unknown session mode shows only error/retry, never credential inputs; expired space requires a new session |
 | Send message | Show sending; keep stable client ID until ACK; clear draft only after confirmed | Keep draft and retry same ID; no unsafe autoqueue/persistent local chat storage |
 | Create event/announcement | Submit disabled; server result then close/return list and toast | Preserve input; fields/summary; cancel/back uses shared discard confirmation |
 | RSVP/cancel/accept offer | Pessimistic server confirmation; refetch detail/count | Never infer a seat from cache. Reuse operation ID on uncertain retry; stale state explained |

@@ -111,7 +111,7 @@ def initialize(path):
 
 @contextmanager
 def transaction(request):
-    db = connect(request.app.state.db_path)
+    db = connect(getattr(request.state, "db_path", request.app.state.db_path))
     try:
         db.execute("BEGIN IMMEDIATE")
         yield db

@@ -1,32 +1,52 @@
 """Local-only ASGI entry point. Public deployment needs a separate security design."""
 
 import os
+from contextlib import asynccontextmanager
 from pathlib import Path
 import time
 from urllib.parse import urlsplit
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from community import auth_routes, chat_routes, event_routes, group_routes, growth, safety_routes
 from community.database import initialize
 from community.seed import seed_demo
+from community.preview_boundary import PreviewBoundary
+from community.preview_store import PreviewStore, preview_metadata
 
 
 ORIGINS = {f"http://{host}:{port}" for host in ("localhost", "127.0.0.1") for port in (5173, 4173, 8000)}
 
 
-def create_app(db_path=None, demo=False, clock=None, allowed_origins=None):
-    application = FastAPI(title="ourcommunity · local prototype", docs_url=None, redoc_url=None)
+def create_app(db_path=None, demo=False, clock=None, allowed_origins=None, preview=False,
+               public_origin=None, preview_root=None, preview_limits=None, static_dir=None):
+    @asynccontextmanager
+    async def lifespan(instance):
+        yield
+        if instance.state.preview_store:
+            instance.state.preview_store.close()
+
+    application = FastAPI(title="ourcommunity · prototype", docs_url=None, redoc_url=None, lifespan=lifespan,
+                          openapi_url=None if preview else "/openapi.json")
     application.state.db_path = Path(db_path or os.environ.get("COMMUNITY_DB", ".harness/community.sqlite3"))
-    application.state.demo = demo
+    application.state.demo = demo or preview
     application.state.clock = clock or time.time
     application.state.allowed_origins = set(allowed_origins or ORIGINS)
-    initialize(application.state.db_path)
-    if demo:
-        seed_demo(application.state.db_path, application.state.clock())
+    application.state.preview_store = None
+    if preview:
+        if os.environ.get("WEB_CONCURRENCY", "1") != "1":
+            raise ValueError("Preview requires exactly one worker")
+        application.state.preview_store = PreviewStore(public_origin, application.state.clock,
+                                                       root=preview_root, **(preview_limits or {}))
+    else:
+        initialize(application.state.db_path)
+        if demo:
+            seed_demo(application.state.db_path, application.state.clock())
 
     @application.middleware("http")
     async def local_boundary(request: Request, call_next):
+        if preview:
+            return await call_next(request)
         hostname = request.url.hostname
         allowed_hosts = {urlsplit(origin).hostname for origin in application.state.allowed_origins}
         if hostname not in allowed_hosts:
@@ -51,13 +71,36 @@ def create_app(db_path=None, demo=False, clock=None, allowed_origins=None):
         return JSONResponse({"detail": "입력한 내용을 확인해 주세요.", "fields": fields}, status_code=422)
 
     @application.get("/api/health")
-    def health():
-        return {"status": "ok", "demo": demo, "external_auth": False, "push_connected": False}
+    def health(request: Request):
+        return {"status": "ok", "demo": demo or preview, "external_auth": False,
+                "push_connected": False, **preview_metadata(request)}
 
     for router in (auth_routes.ROUTER, group_routes.ROUTER, chat_routes.ROUTER,
                    event_routes.ROUTER, growth.ROUTER, safety_routes.ROUTER):
         application.include_router(router)
+    if preview:
+        application.add_middleware(PreviewBoundary, store=application.state.preview_store)
+        assets = Path(static_dir or Path(__file__).resolve().parent.parent / "web" / "dist").resolve()
+
+        @application.get("/{path:path}")
+        def preview_frontend(path: str):
+            if path == "api" or path.startswith("api/") or any(ord(char) < 32 or ord(char) == 127 for char in path):
+                raise HTTPException(404, "찾을 수 없는 주소예요.")
+            try:
+                target = (assets / path).resolve()
+                if not target.is_relative_to(assets):
+                    raise HTTPException(404, "찾을 수 없는 주소예요.")
+                if target.is_file():
+                    return FileResponse(target)
+            except (ValueError, OSError):
+                raise HTTPException(404, "찾을 수 없는 주소예요.") from None
+            if path.startswith("assets/") or Path(path).suffix:
+                raise HTTPException(404, "파일을 찾을 수 없어요.")
+            if not (assets / "index.html").is_file():
+                raise HTTPException(503, "체험 화면을 준비하고 있어요.")
+            return FileResponse(assets / "index.html")
     return application
 
 
-app = create_app(demo=os.environ.get("DEMO_MODE") == "1")
+app = create_app(demo=os.environ.get("DEMO_MODE") == "1", preview=os.environ.get("PREVIEW_MODE") == "1",
+                 public_origin=os.environ.get("PUBLIC_ORIGIN"))

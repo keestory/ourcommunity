@@ -55,6 +55,8 @@ def preferences(group_id: str, data: PreferenceInput, request: Request):
 
 @ROUTER.patch("/groups/{group_id}/settings")
 def settings(group_id: str, data: SettingsInput, request: Request):
+    if getattr(request.app.state, "preview_store", None) and data.public_space is not None:
+        raise HTTPException(403, "개별 체험에서는 공간을 외부에 공개할 수 없어요.")
     with transaction(request) as db:
         user = current_user(request, db)
         membership = member(db, group_id, user["id"], staff=True)

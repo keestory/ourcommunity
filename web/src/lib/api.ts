@@ -17,7 +17,7 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
   }
   const payload = await response.json().catch(() => ({}))
   if (!response.ok) {
-    if (response.status === 401 && !path.startsWith('/auth/')) window.dispatchEvent(new Event('session-expired'))
+    if (response.status === 401 && path !== '/session' && !path.startsWith('/auth/')) window.dispatchEvent(new Event('session-expired'))
     if (response.status === 403) window.dispatchEvent(new CustomEvent('access-check', { detail: path }))
     throw new ApiError(typeof payload.detail === 'string' ? payload.detail : '요청을 처리하지 못했어요. 다시 확인해 주세요.', response.status, payload.fields)
   }

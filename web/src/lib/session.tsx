@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
-import { api, mutate, setCsrf } from './api'
+import { api, ApiError, errorText, mutate, setCsrf } from './api'
 import type { Session } from './types'
 const EMPTY: Session = { user: null, csrf: null, demo: false }
 const Context = createContext<{ session: Session; loading: boolean; error: string; refresh: () => Promise<void>; login: (mode: string, data: unknown) => Promise<void>; logout: () => Promise<void> } | null>(null)
@@ -14,8 +14,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     invalidate()
     const current = generation.current
     const controller = new AbortController(); pending.current = controller
-    try { const value = await api<Session>('/session', { signal: controller.signal }); if (current !== generation.current) return; setCsrf(value.csrf); setSession(value); setError('') }
-    catch { if (current === generation.current && !controller.signal.aborted) setError('앱 서버에 연결하지 못했어요. 실행 상태를 확인하고 다시 시도해 주세요.') }
+    try { const value = await api<Session>('/session', { signal: controller.signal }).catch(error => { if (error instanceof ApiError && error.status === 401) return api<Session>('/session', { signal: controller.signal }); throw error }); if (current !== generation.current) return; setCsrf(value.csrf); setSession(value); setError('') }
+    catch (failure) { if (current === generation.current && !controller.signal.aborted) setError(errorText(failure)) }
     finally { if (current === generation.current) setLoading(false) }
   }, [invalidate])
   useEffect(() => { void refresh(); return invalidate }, [refresh, invalidate])

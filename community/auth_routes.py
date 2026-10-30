@@ -5,6 +5,7 @@ import sqlite3
 from fastapi import APIRouter, HTTPException, Request, Response
 from community.database import now, transaction
 from community.schemas import DemoInput, LoginInput, RegisterInput
+from community.preview_store import preview_metadata
 from community.security import (
     COOKIE, create_session, current_user, digest, hash_password,
     identity_enabled, session_row, verify_password,
@@ -21,7 +22,7 @@ def session(request: Request):
         user = None
         if row:
             user = {"id": row["user_id"], **{k: row[k] for k in ("username", "display_name", "color")}}
-        return {"user": user, "csrf": row["csrf"] if row else None, "demo": request.app.state.demo}
+        return {"user": user, "csrf": row["csrf"] if row else None, "demo": request.app.state.demo, **preview_metadata(request)}
 
 
 @ROUTER.post("/auth/demo")

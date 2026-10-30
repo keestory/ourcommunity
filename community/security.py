@@ -56,7 +56,7 @@ def current_user(request, db):
         raise HTTPException(401, "로그인이 필요해요. 다시 로그인해 주세요.")
     if request.method not in {"GET", "HEAD", "OPTIONS"}:
         supplied = request.headers.get("x-csrf-token", "")
-        if not hmac.compare_digest(supplied, session["csrf"]):
+        if not supplied.isascii() or not hmac.compare_digest(supplied, session["csrf"]):
             raise HTTPException(403, "요청을 확인할 수 없어요. 새로고침 후 다시 시도해 주세요.")
     return {"id": session["user_id"], **{k: session[k] for k in ("username", "display_name", "color")}}
 
@@ -86,11 +86,15 @@ def event_for(db, event_id, user_id, staff=False):
 
 
 def create_session(request, response, db, user):
+    from community.preview_store import preview_metadata
     token, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
     db.execute("DELETE FROM sessions WHERE expires_at<=?", (now(request),))
     old = request.cookies.get(COOKIE)
     if old:
         db.execute("DELETE FROM sessions WHERE token_hash=?", (digest(old),))
-    db.execute("INSERT INTO sessions VALUES(?,?,?,?)", (digest(token), user["id"], csrf, now(request) + 86400 * 7))
-    response.set_cookie(COOKIE, token, max_age=86400 * 7, httponly=True, samesite="strict", secure=False)
-    return {"user": user_view(user), "csrf": csrf, "demo": request.app.state.demo}
+    preview = getattr(request.app.state, "preview_store", None)
+    expiry = request.state.preview_guest.expires if preview else now(request) + 86400 * 7
+    db.execute("INSERT INTO sessions VALUES(?,?,?,?)", (digest(token), user["id"], csrf, expiry))
+    response.set_cookie(COOKIE, token, max_age=max(0, int(expiry - now(request))), httponly=True,
+                        samesite="strict", secure=preview.secure if preview else False)
+    return {"user": user_view(user), "csrf": csrf, "demo": request.app.state.demo, **preview_metadata(request)}
