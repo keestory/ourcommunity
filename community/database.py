@@ -111,6 +111,11 @@ def initialize(path):
 
 @contextmanager
 def transaction(request):
+    store = getattr(request.app.state, "preview_store", None)
+    if store and hasattr(store, "transaction"):
+        with store.transaction(request.state.preview_guest) as db:
+            yield db
+        return
     db = connect(getattr(request.state, "db_path", request.app.state.db_path))
     try:
         db.execute("BEGIN IMMEDIATE")

@@ -68,7 +68,9 @@ class PreviewBoundary:
                 token = cookie[GUEST_COOKIE].value if GUEST_COOKIE in cookie else None
                 guest, fresh = await run_in_threadpool(self.store.acquire, token,
                     path == "/api/session" and scope["method"] == "GET", scope["method"] not in SAFE_METHODS)
-                scope.setdefault("state", {}).update(db_path=guest.path, preview_guest=guest)
+                scope.setdefault("state", {})["preview_guest"] = guest
+                if hasattr(guest, "path"):
+                    scope["state"]["db_path"] = guest.path
             await self.app(scope, bounded_receive, secure_send)
         except HTTPException as error:
             response = JSONResponse({"detail": error.detail}, status_code=error.status_code)
@@ -80,7 +82,7 @@ class PreviewBoundary:
             await response(scope, receive, secure_send)
         finally:
             if guest:
-                self.store.release(guest)
+                await run_in_threadpool(self.store.release, guest)
 
     def _validate(self, scope, headers):
         for name in ("host", "origin", "content-length", "cookie"):

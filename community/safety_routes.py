@@ -18,7 +18,7 @@ def block(group_id: str, target_id: str, request: Request):
         member(db, group_id, target_id)
         if target_id == user["id"]:
             raise HTTPException(422, "자신을 차단할 수 없어요.")
-        db.execute("INSERT OR IGNORE INTO blocks VALUES(?,?)", (user["id"], target_id))
+        db.execute("INSERT OR IGNORE INTO blocks(actor_id,target_id) VALUES(?,?)", (user["id"], target_id))
         return {"ok": True}
 
 

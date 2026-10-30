@@ -1,4 +1,4 @@
-"""Local-only ASGI entry point. Public deployment needs a separate security design."""
+"""Local product and isolated previews, with explicit storage and host boundaries."""
 
 import os
 from contextlib import asynccontextmanager
@@ -19,7 +19,11 @@ ORIGINS = {f"http://{host}:{port}" for host in ("localhost", "127.0.0.1") for po
 
 
 def create_app(db_path=None, demo=False, clock=None, allowed_origins=None, preview=False,
-               public_origin=None, preview_root=None, preview_limits=None, static_dir=None):
+               public_origin=None, preview_root=None, preview_limits=None, static_dir=None, postgres_dsn=None):
+    if os.environ.get("VERCEL") == "1" and (not preview or not postgres_dsn):
+        raise ValueError("Vercel preview requires PREVIEW_MODE=1 and shared PREVIEW_DATABASE_URL")
+    if not public_origin and os.environ.get("VERCEL") == "1" and os.environ.get("VERCEL_URL"):
+        public_origin = "https://" + os.environ["VERCEL_URL"]
     @asynccontextmanager
     async def lifespan(instance):
         yield
@@ -33,7 +37,12 @@ def create_app(db_path=None, demo=False, clock=None, allowed_origins=None, previ
     application.state.clock = clock or time.time
     application.state.allowed_origins = set(allowed_origins or ORIGINS)
     application.state.preview_store = None
-    if preview:
+    if postgres_dsn and not preview:
+        raise ValueError("Shared PostgreSQL is available only for isolated preview")
+    if preview and postgres_dsn:
+        from community.postgres_preview import PostgresPreviewStore
+        application.state.preview_store = PostgresPreviewStore(public_origin, postgres_dsn, **(preview_limits or {}))
+    elif preview:
         if os.environ.get("WEB_CONCURRENCY", "1") != "1":
             raise ValueError("Preview requires exactly one worker")
         application.state.preview_store = PreviewStore(public_origin, application.state.clock,
@@ -72,6 +81,9 @@ def create_app(db_path=None, demo=False, clock=None, allowed_origins=None, previ
 
     @application.get("/api/health")
     def health(request: Request):
+        store = application.state.preview_store
+        if store and hasattr(store, "check"):
+            store.check()
         return {"status": "ok", "demo": demo or preview, "external_auth": False,
                 "push_connected": False, **preview_metadata(request)}
 
@@ -103,4 +115,4 @@ def create_app(db_path=None, demo=False, clock=None, allowed_origins=None, previ
 
 
 app = create_app(demo=os.environ.get("DEMO_MODE") == "1", preview=os.environ.get("PREVIEW_MODE") == "1",
-                 public_origin=os.environ.get("PUBLIC_ORIGIN"))
+                 public_origin=os.environ.get("PUBLIC_ORIGIN"), postgres_dsn=os.environ.get("PREVIEW_DATABASE_URL"))

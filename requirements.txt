@@ -1,0 +1,2 @@
+# Vercel Python build entry. Product dependencies stay in one pinned source.
+-r requirements-app.txt

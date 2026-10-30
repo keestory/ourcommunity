@@ -40,6 +40,8 @@ No data table bulk selection is implemented; table-selection ownership is not ap
 | Public/consent/role changes | Explicit confirmation when widening or removing access | Keep previous state until server confirmation; scoped error and retry |
 | Leave/delete/report | Object/consequence in app dialog; focus cancel; success removes inaccessible view | Preserve safe context, Escape/cancel leaves state unchanged |
 
+Preview lifetime copy follows server metadata: SQLite preview resets on process restart; shared PostgreSQL preview keeps the same visitor until expiry. Both show the one-hour limit and synthetic-data warning. Access expiry does not promise immediate physical deletion or backup erasure; the deployment record defines delayed cleanup. Shared PostgreSQL is locally tested preparation, not an externally connected service.
+
 ## Async and permission behavior
 
 GET requests carry AbortSignal and ignore superseded responses. Chat/group changes poll every 3 seconds, plus explicit refetch after mutations/visibility changes. This is near-realtime polling, not websocket/push delivery. A failed read shows one persistent stale/offline banner and retry; it is never presented as synchronized. 401 clears session/private caches, 403 removes group content and explains access. Logout broadcasts to sibling tabs and cancels requests. No retry loop on authorization failure.

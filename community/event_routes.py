@@ -62,7 +62,7 @@ def rsvp(event_id: int, data: RsvpInput, request: Request):
             raise HTTPException(409, "같은 요청 번호로 다른 작업을 할 수 없어요.")
         if not prior:
             apply_rsvp(db, event, user["id"], data.action, now(request))
-            db.execute("INSERT INTO idempotency VALUES(?,?,?,?)", (user["id"], scope, data.request_id, data.action))
+            db.execute("INSERT INTO idempotency(user_id,scope,request_id,action) VALUES(?,?,?,?)", (user["id"], scope, data.request_id, data.action))
             record_audit(db, event["group_id"], user["id"], "rsvp_" + data.action, event_id, "참가 상태 변경", now(request))
         return event_view(db, event, user["id"], membership["role"], now(request))
 

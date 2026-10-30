@@ -94,7 +94,7 @@ def create_session(request, response, db, user):
         db.execute("DELETE FROM sessions WHERE token_hash=?", (digest(old),))
     preview = getattr(request.app.state, "preview_store", None)
     expiry = request.state.preview_guest.expires if preview else now(request) + 86400 * 7
-    db.execute("INSERT INTO sessions VALUES(?,?,?,?)", (digest(token), user["id"], csrf, expiry))
+    db.execute("INSERT INTO sessions(token_hash,user_id,csrf,expires_at) VALUES(?,?,?,?)", (digest(token), user["id"], csrf, expiry))
     response.set_cookie(COOKIE, token, max_age=max(0, int(expiry - now(request))), httponly=True,
                         samesite="strict", secure=preview.secure if preview else False)
     return {"user": user_view(user), "csrf": csrf, "demo": request.app.state.demo, **preview_metadata(request)}

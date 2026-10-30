@@ -120,7 +120,7 @@ class PreviewStore:
             self._clean(self.clock())
 
     def metadata(self, guest=None):
-        return {"enabled": True, "isolated": True, "persistent": False, "ttl_seconds": self.ttl,
+        return {"enabled": True, "isolated": True, "persistent": False, "restart_resets": True, "ttl_seconds": self.ttl,
                 "expires_at": iso(guest.expires) if guest else None,
                 "mutation_limit": self.mutation_limit, "sharing_enabled": False}
 

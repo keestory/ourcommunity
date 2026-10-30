@@ -57,6 +57,8 @@ npm --prefix web run test:e2e
 
 현재 컨테이너 검증은 통과했지만 공개 체험 URL은 없습니다. 단일 인스턴스 장기 실행 호스트가 필요하며, 현재 메모리 세션·임시 SQLite 구조를 Vercel 함수에 그대로 배포하면 재시작·다중 인스턴스에서 체험이 끊깁니다.
 
+후속 작업으로 [공유 PostgreSQL 체험 어댑터](docs/implementation/postgres-preview.md)와 제한 역할 migration을 로컬에서 준비했습니다. `PREVIEW_DATABASE_URL`을 지정하면 서버 재시작 뒤에도 남은 체험 시간 동안 상태를 이어갑니다. 외부 Supabase/Vercel 연결·권한·비밀정보 설정은 승인 전이라 실행하지 않았습니다. PostgreSQL 테스트 재현과 정확한 외부 설정 단계는 해당 문서를 참고하세요.
+
 빌드한 화면으로 별도 체험 테스트를 실행할 수 있습니다.
 
 ```bash

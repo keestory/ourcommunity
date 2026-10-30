@@ -18,5 +18,5 @@ def creation_receipt(db, user_id, scope, data):
 
 
 def save_receipt(db, user_id, scope, request_id, fingerprint, object_id):
-    db.execute("INSERT INTO idempotency VALUES(?,?,?,?)",
+    db.execute("INSERT INTO idempotency(user_id,scope,request_id,action) VALUES(?,?,?,?)",
                (user_id, scope, request_id, json.dumps({"fingerprint": fingerprint, "id": object_id})))

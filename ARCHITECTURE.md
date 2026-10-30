@@ -69,3 +69,9 @@ web/ (React + TypeScript + Vite)
 `PREVIEW_MODE=1`은 `preview_boundary.py`에서 정확한 Host/Origin, 본문 크기, 보안 헤더, 체험용 API 제한을 검사한다. `preview_store.py`는 서버 발급 cookie의 해시를 방문자별 임시 SQLite 경로에 연결하고 수명·요청·작성 한도를 관리한다. 요청의 `state.db_path`만 `database.transaction`으로 전달하며 로컬 개발 DB를 열지 않는다. 기존 리소스별 권한과 CSRF 검사는 그대로 실행한다.
 
 `Dockerfile`은 `web/dist`와 FastAPI를 같은 origin에서 비루트 사용자로 실행한다. 한 프로세스·한 worker·한 인스턴스 전용이며 데이터는 기본 1시간 또는 프로세스 종료까지다. registry가 메모리에 있으므로 Vercel 함수의 콜드스타트·다중 인스턴스에 적합하지 않다. 공유 저장소와 세션 경계를 재설계하기 전에는 서버리스 배포 설정을 추가하지 않는다. [실제 검증과 호스팅 조건](./docs/implementation/preview-deployment.md)을 따른다.
+
+## PostgreSQL 공유 체험 어댑터
+
+후속 로컬 준비에서 `PREVIEW_DATABASE_URL`이 지정된 체험 모드를 추가했다. `postgres_preview.py`가 guest·lease·요청 예산을 PostgreSQL에 두고, guest 행 잠금과 트랜잭션 한정 tenant 설정 뒤 `postgres.py`의 SQL 어댑터로 기존 업무 로직을 실행한다. 모든 도메인 테이블의 RLS와 복합 tenant 제약은 별도 migration에서 준비한다. 프로세스마다 저장소를 만드는 기존 SQLite 체험과 명시적으로 분기한다.
+
+`api/index.py`와 `vercel.json`은 공유 모드용 배포 후보이며 외부 적용·실제 함수 빌드는 아직 하지 않았다. `VERCEL=1`에서 공유 DSN이 없으면 시작을 거부한다. 전용 스키마·최소 역할·TLS·기존 PUBLIC 권한 검사 및 승인 후 단계는 [공유 PostgreSQL 준비](./docs/implementation/postgres-preview.md)를 따른다. 기존 public/Auth와 하네스에는 새 데이터 경로나 권한을 연결하지 않는다.

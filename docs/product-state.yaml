@@ -14,9 +14,9 @@ status:
   - 1
   - 2
   gate_verdict: blocked
-  review_level: L2 local product and isolated preview container
+  review_level: L2 local PostgreSQL shared-preview preparation
   review_verdict: pass
-  task_grade: S3 제품 / 격리 체험 로컬 검증 완료, 공개 배포 Blocked
+  task_grade: S3 제품 / 공유 체험 로컬 구현, 외부 지속 연결 승인 대기
   primary_industry: community
   secondary_industries:
   - o2o-reservation
@@ -27,18 +27,20 @@ status:
   - design-intelligence
   - quality-assurance
   - privacy
-  task_scope: 기능 브랜치 게시·초안 PR·체험 배포 승인; main 병합·새 계정/비용·외부 비밀키·지속 접근 변경 제외
+  task_scope: PostgreSQL 어댑터·migration·테스트 로컬 준비; Supabase/Vercel 외부 스키마·권한·비밀정보·배포 보류
   discoverability: required
   store_compliance: not-applicable
   store_compliance_reason: 로컬 브라우저 제품이며 모바일 스토어 제출 없음; 네이티브 선택 시 재판정
   competitive_benchmark: not-applicable
   updated_at: '2026-10-30'
   timezone: Asia/Seoul
-  discoverability_reason: 체험 deep link·SPA 경로·noindex/no-store·Host/Origin 경계를 검증; 공개 URL·검색 색인 없음
+  discoverability_reason: 기존 프리뷰 Host/Origin·noindex 계약 유지; Vercel 배포 URL의 정확한 origin 후보와 rewrite는 공개 검증 전
   local_implementation_verdict: pass
   competitive_benchmark_reason: 이번 변경은 기존 제품의 격리 체험·호스팅 준비이며 신규 경쟁/시장 판단 없음; 기존 패턴 근거 보존
-  preview_container_verdict: pass
+  preview_container_verdict: pass at a6d22bc; PostgreSQL version tested as local ASGI, image rebuild not run
   public_deployment_verdict: blocked
+  postgres_local_verdict: pass
+  external_connection_approval: pending
 evidence:
   register: docs/product-specs/ourcommunity/evidence-decisions.md
   observed_facts:
@@ -51,6 +53,8 @@ evidence:
   - 'E17: 지연된 준비 질문 응답으로 러닝 우선·초기 모바일 웹 무료 검증 선택; 이후 채팅/공동 성장 및 개발 승인 유지'
   - 'E18: 휴대폰 체험 배포 승인; 컨테이너 경계와 기존 브랜치 수정·푸시 포함'
   - 'E19: 관리 작업의 기존 PR #1·Vercel 팀 확인 전달; 현재 함수 저장 구조 미호환'
+  - 'E20: 관리 작업이 기존 Supabase 서울 PostgreSQL17 및 다른 제품 public 데이터 확인; 외부 지속 연결 승인 대기'
+  - 'E21: a6d22bc 원격 statuses/check_runs 0 확인 전달'
   official_source_reviews_received:
   - 'E07–E10: Heylo/Wodify/SugarWOD/WebKit 공식자료를 관리 작업이 확인하여 전달'
   - 'E14/R01–R05: Clubhouse/Gather Classic/Discord/Habitica/Forest 공식 패턴 검토 전달'
@@ -77,6 +81,7 @@ decisions:
   - D14
   - D15
   - D16
+  - D17
   pending_user_decisions:
   - 'Q1: 첫 검증 지역과 접근 가능한 실제 러닝 크루'
   - 'Q2: 초기 모바일 웹의 대상 기기와 설치/알림/복귀 요구; 생산 플랫폼은 후속 검증'
@@ -99,14 +104,16 @@ execution:
   - '기존 기능 브랜치와 초안 PR #1 게시 확인; main 유지'
   - 방문자별 임시 DB·역할 선택·상한·만료·Origin/Host/본문 경계를 갖춘 체험 모드
   - Docker 이미지 빌드·비루트/읽기 전용 root 실행, Python 79개·브라우저 11개 통과
+  - 전용 PostgreSQL migration/제한 role/tenant RLS·복합 제약·공유 guest/lease/요청 예산 어댑터 로컬 구현
+  - PostgreSQL17.11 새 fixture 초기화, Python96개·브라우저 기존9+공유체험2 검증
   blockers:
   - 'Gate0: 대상/기기/성공·중단 기준 미확정'
   - 'Gate1: 기능 설명 외에 독립 고객 문제/수요 근거 부족'
   - 'Gate2: 인터뷰·자발적 이전·반복 행동 증거 없음; 실제 모집/연락 미승인'
   - 'Game Concept/Prototype: 비교/과업/공정성 시험 미완료'
   - 'Gate3–5: 사업/UX/권한·보관·운영·집계/기여 규칙 미확정'
-  - 'Public preview: 현재 연결된 Vercel 함수는 메모리 guest registry/임시 SQLite를 공유하지 못함; 승인된 공유 저장소 또는 단일 장기 실행 호스트 필요'
-  next_step: 기존 승인된 단일 Docker/Python 호스트 확인 또는 Vercel용 공유 저장소·접근 범위 결정 후 저장/세션 구조 변경; 공개 URL에서 최종 QA
+  - 'Public preview: Supabase 전용 스키마·최소 권한 서버 연결정보의 Vercel 저장 승인 대기; 실제 PUBLIC grant/TLS/풀러 및 Vercel 함수 빌드/공개 URL 미검증'
+  next_step: 외부 지속 연결 승인 후 전용 역할/스키마와 현재 권한 경계를 확인하고 서버 비밀정보를 연결; Vercel preview 배포 뒤 실제 공개 URL QA
   plan: docs/product-specs/ourcommunity/execution-qa.md
   code_changes: true
   commit_created: true
@@ -117,29 +124,39 @@ execution:
     branch: feat/sports-community-prototype
     verified_implementation_sha: a6fcc3bda2c8607b10025a751a0a3224c5636417
     draft_pr: https://github.com/keestory/ourcommunity/pull/1
-    ci: 9615785ee247c2c54d9795d138655618ea927ecb의 statuses/checks/workflows 0 (관리 작업 확인); 체험 후속 commit CI는 별도 확인 필요
+    ci: a6d22bcb83c01ef842a530b5bc7dce8735b5fe93 원격 statuses/check_runs 0 (관리 작업 확인); PostgreSQL 준비 변경은 로컬
     main_changed: false
+    last_verified_remote_sha: a6d22bcb83c01ef842a530b5bc7dce8735b5fe93
   preview:
     public_url: null
     deployment_revision: null
-    runtime: single process, single instance; ephemeral per-visitor SQLite
+    runtime: SQLite single-process or PostgreSQL shared-state preview; no external deployment
     local_image: sha256:f73d12703f85c402366984148511197f186d43ddec8cf5a623784d907eea8322
     report: docs/implementation/preview-deployment.md
     external_auth: false
     device_push: false
     physical_iphone_test: false
+    postgres:
+      state: local preparation only
+      external_approval: pending
+      external_schema_applied: false
+      external_credentials_configured: false
+      local_database_version: '17.11'
+      schema: ourcommunity_preview
+      runtime_role: ourcommunity_preview_runtime
+      report: docs/implementation/postgres-preview.md
+    local_image_revision: a6d22bcb83c01ef842a530b5bc7dce8735b5fe93
 quality:
-  report: docs/implementation/preview-deployment.md
+  report: docs/implementation/postgres-preview.md
   acceptance_evidence:
   - 기존 준비 문서 L1 결과는 보존; 구현 검증은 별도 기록
   - 독립 백엔드/프런트 검토 및 수정 후 재검증 완료
   - strict UI audit 오류·경고 0; 토큰/문서 링크/YAML/공백 검사 Pass
   tests:
-  - 'Python 79 passed: 서비스47 + 기존하네스32; 의존성 deprecation 경고1'
-  - Chromium 기존 E2E9 + 실제 Docker 체험 E2E2 passed; 실제 iPhone 아님
-  - ESLint/TypeScript/Vite build Pass; 하네스 lint 오류0·제3자경고2
-  - strict UI audit 오류·경고0; 실제 Docker API/SPA·격리·역할/성장·새로고침 Pass
-  - 공개 HTTPS URL·실제 기기·외부 인증/푸시 미검증
+  - 'Python96 passed: 기준79 + PostgreSQL 관련17(실제 로컬DB10/설정7)'
+  - 기존 Chromium E2E9 passed + PostgreSQL 2worker 체험 E2E2 passed
+  - ESLint/TypeScript/Vite build 및 strict UI audit Pass; 하네스 오류0·기존 제3자경고2
+  - 실제 Supabase 권한/TLS/Supavisor·Vercel 빌드/공개 URL·iPhone 실기기 미검증
   unresolved_risks:
   - 실제 고객 수요·그룹 이전·반복 사용·성장 효과 미검증
   - 생산 인증·푸시·계정 삭제/보관·소유권 이전·운영 체계 미구현
@@ -147,6 +164,8 @@ quality:
   - 운영자 공모·공정성·부상/장애 참여·시설 변경/자산 귀속 정책 미검증
   - SQLite 단일 인스턴스/폴링의 성능·실제 모바일 기기·운영 가용성 미검증
   - 체험은 1시간/재시작 시 초기화, 다중 worker/인스턴스 미지원; 공개 호스팅·부하/가용성 검증 필요
+  - PostgreSQL 만료는 접근 차단이며 물리회수는 다음 guest 생성 시; 백업 보관·엄격 삭제 시한 미확정
+  - 기존 PUBLIC 권한을 runtime이 상속할 수 있어 실제 프로젝트에서 별도 검사 필요; 기존 권한 자동 회수 금지
 artifacts:
 - docs/product-specs/ourcommunity/README.md
 - docs/product-specs/ourcommunity/product-brief.md
@@ -170,3 +189,8 @@ artifacts:
 - docs/implementation/screenshots/preview-mobile-memories.png
 - docs/implementation/screenshots/preview-desktop-space.png
 - Dockerfile
+- docs/implementation/postgres-preview.md
+- migrations/001_preview_postgres.sql
+- vercel.json
+- docs/implementation/screenshots/postgres-mobile-memories.png
+- docs/implementation/screenshots/postgres-desktop-space.png
