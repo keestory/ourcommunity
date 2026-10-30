@@ -40,7 +40,7 @@ No data table bulk selection is implemented; table-selection ownership is not ap
 | Public/consent/role changes | Explicit confirmation when widening or removing access | Keep previous state until server confirmation; scoped error and retry |
 | Leave/delete/report | Object/consequence in app dialog; focus cancel; success removes inaccessible view | Preserve safe context, Escape/cancel leaves state unchanged |
 
-Preview lifetime copy follows server metadata: SQLite preview resets on process restart; shared PostgreSQL preview keeps the same visitor until expiry. Both show the one-hour limit and synthetic-data warning. Access expiry does not promise immediate physical deletion or backup erasure; the deployment record defines delayed cleanup. Shared PostgreSQL is locally tested preparation, not an externally connected service.
+Preview lifetime copy follows server metadata: SQLite preview resets on process restart; shared PostgreSQL preview keeps the same visitor until expiry. Both show the one-hour limit and synthetic-data warning. Access expiry does not promise immediate physical deletion or backup erasure; the deployment record defines delayed cleanup. Shared PostgreSQL is locally tested and its dedicated external connection is authorized; the external deployment remains unverified.
 
 ## Async and permission behavior
 

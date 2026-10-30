@@ -285,3 +285,17 @@ def test_notification_cannot_reference_another_tenant_event(pg):
             db.execute('INSERT INTO ourcommunity_preview.notifications(user_id,group_id,kind,title,event_id,created_at) VALUES(%s,%s,%s,%s,%s,%s)',
                        ('sora', 'hangang', 'test', 'invalid cross-tenant event', event, time.time()))
         db.rollback()
+
+
+def test_column_only_public_grant_is_detected(pg):
+    dsn, admin, app = pg
+    with admin() as db:
+        db.execute('GRANT SELECT(payload) ON public.other_product_private TO PUBLIC')
+    try:
+        with psycopg.connect(dsn) as db:
+            assert not db.execute("SELECT has_table_privilege(current_user,'public.other_product_private','SELECT')").fetchone()[0]
+            assert 'external relation privilege: public.other_product_private' in privilege_violations(db)
+        assert TestClient(app(), base_url=ORIGIN).get('/api/health').status_code == 503
+    finally:
+        with admin() as db:
+            db.execute('REVOKE SELECT(payload) ON public.other_product_private FROM PUBLIC')

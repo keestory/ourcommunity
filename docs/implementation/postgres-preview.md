@@ -1,6 +1,6 @@
 # PostgreSQL 공유 체험 준비
 
-2026-10-30 UTC. **로컬 구현·검증 준비이며 외부 연결 승인은 아직 대기 중**이다. 외부 Supabase DDL·권한·비밀키·Auth·Vercel 환경변수·배포를 실행하지 않았다. 기존 SQLite 개발 모드와 [단일 프로세스 체험](preview-deployment.md)은 유지한다. 이 문서가 승인이나 공개 URL 발급의 증거는 아니다.
+2026-10-30 UTC. **로컬 구현 검증을 완료했고, 2026-10-30 01:00 UTC 사용자가 전용 지속 연결을 승인했다**. 실제 외부 적용·검증은 아직 완료되지 않았다. 외부 Supabase DDL·권한·비밀키·Auth·Vercel 환경변수·배포를 실행하지 않았다. 기존 SQLite 개발 모드와 [단일 프로세스 체험](preview-deployment.md)은 유지한다. 이 문서가 승인이나 공개 URL 발급의 증거는 아니다.
 
 ## 대상과 최소 변경
 
@@ -56,7 +56,7 @@ Docker 설정 디렉터리가 읽기 전용인 이 클라우드에서는 첫 스
 
 PostgreSQL 테스트는 명시적 `OURCOMMUNITY_TEST_POSTGRES=1`이 없으면 integration 항목을 skip한다. 활성화하면 위 로컬 테스트 DB의 ourcommunity 데이터만 초기화한다. 외부 DSN을 받아 migration을 자동 실행하는 테스트가 아니다. 외부 저장소의 읽기 전용 preflight 명령은 승인된 서버 환경에서 `.venv/bin/python -m scripts.check_preview_postgres`이며 URL/비밀번호를 출력하지 않는다.
 
-## 승인 후 필요한 최소 외부 단계
+## 승인된 외부 적용 단계
 
 1. **대상과 권한 확인:** 지정된 Supabase 프로젝트·별도 스키마 이름 충돌·현재 PUBLIC grant·DDL 실행자 권한·전용 role 연결 및 TLS 경로를 읽기 확인한다. 기존 제품 접근이 상속되면 연결을 진행하지 않는다.
 2. **전용 영역과 연결정보:** 검토한 migration을 권한 있는 관리 경로로 한 번 적용하고 runtime만 LOGIN 가능하게 한다. 전용 role 비밀번호는 승인된 비밀정보 입력 경로에서 생성·전달하며 채팅/저장소/로그에 남기지 않는다. 소유자·postgres·service_role 연결정보는 Vercel에 저장하지 않는다.
@@ -68,7 +68,7 @@ PostgreSQL 테스트는 명시적 `OURCOMMUNITY_TEST_POSTGRES=1`이 없으면 in
 
 | 검사 | 최종 결과 / 한계 |
 |---|---|
-| Python 전체 | **96 passed** = 기존 79 + PostgreSQL 관련 17(실제 로컬 DB 10, 설정 경계 7). 기존 Starlette/httpx deprecation 경고 1 |
+| Python 전체 | **97 passed** = 기존 79 + PostgreSQL 관련 18(실제 로컬 DB 11, 설정 경계 7). 기존 Starlette/httpx deprecation 경고 1 |
 | PostgreSQL | **17.11** Docker의 실제 제한 runtime 계정으로 검증. 새 DB 초기 migration·소유자 임시 membership 회수(잔여 0)·preflight Pass |
 | 기존 브라우저 회귀 | **9 passed**, 실제 Chromium. 기존 SQLite 개발 흐름 유지 |
 | 공유 체험 브라우저 | **2 passed**, 로컬 ASGI 진입점의 **2 worker** + PostgreSQL. 모바일/데스크톱·메시지/새로고침·신청·역할 전환·출석/성장·별도 방문자 격리 |
@@ -81,3 +81,5 @@ PostgreSQL 테스트는 명시적 `OURCOMMUNITY_TEST_POSTGRES=1`이 없으면 in
 로그인 응답을 기다리지 않고 다음 요청/페이지 이동을 하던 체험 테스트를 수정해, 인증 완료 화면을 확인한 뒤 진행하도록 했다. 로컬 초기화 스크립트도 빈 fixture에서 실제 실행해 검증했다. [모바일 증거](screenshots/postgres-mobile-memories.png), [데스크톱 증거](screenshots/postgres-desktop-space.png)는 합성 데이터와 로컬 Chromium 화면이다.
 
 **남은 검증:** 실제 Supabase의 유효 권한·TLS/CA·Supavisor 풀러, Vercel의 `icn1` 배치·Python 빌드/함수 번들/rewrites/Host 보존, 공개 HTTPS·실기기 iPhone·부하/가용성. 이번 PostgreSQL 버전의 Docker 이미지 재빌드나 외부 배포는 하지 않았다. 공개 URL·배포 revision은 없다.
+
+승인 이후 실행 순서는 [배포 실행 인계](deployment-handoff.md)의 변경 전 읽기 SQL → 전용 migration → 역할 권한 검사 순서다. 컬럼 단위로만 부여된 기존 권한도 탐지하고 차단한다.

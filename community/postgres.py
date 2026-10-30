@@ -53,7 +53,8 @@ def privilege_violations(db):
     for schema, table in db.execute("SELECT n.nspname,c.relname FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace "
             "WHERE n.nspname NOT IN ('pg_catalog','information_schema',%s) AND n.nspname !~ '^pg_' "
             "AND c.relkind IN ('r','p','v','m','f') AND has_schema_privilege(current_user,n.oid,'USAGE') "
-            "AND has_table_privilege(current_user,c.oid,'SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER')", (SCHEMA,)):
+            "AND (has_table_privilege(current_user,c.oid,'SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER') "
+            "OR has_any_column_privilege(current_user,c.oid,'SELECT,INSERT,UPDATE,REFERENCES'))", (SCHEMA,)):
         failures.append(f"external relation privilege: {schema}.{table}")
     for (schema,) in db.execute("SELECT nspname FROM pg_namespace WHERE nspname !~ '^pg_' "
             "AND has_schema_privilege(current_user,oid,'CREATE')"):
