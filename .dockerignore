@@ -1,6 +1,7 @@
 **
 !Dockerfile
 !requirements-app.txt
+!requirements.txt
 !community/
 !community/*.py
 !web/

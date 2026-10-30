@@ -1,2 +1,5 @@
-# Vercel Python build entry. Product dependencies stay in one pinned source.
--r requirements-app.txt
+# Canonical runtime dependencies for Python deployment and local development.
+fastapi==0.141.1
+uvicorn==0.52.1
+httpx==0.28.1
+psycopg[binary]==3.3.6

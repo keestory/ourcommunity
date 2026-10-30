@@ -14,7 +14,7 @@
 - `community/postgres_preview.py`: 공유 guest 생성·예산·만료/lease 및 tenant 트랜잭션.
 - `community/database.py`: 검증된 guest에 따라 PostgreSQL 트랜잭션을 선택. 기존 SQLite 경로 유지.
 - `migrations/001_preview_postgres.sql`: 별도 검토 후 한 번 실행하는 초기 DDL. 앱 시작 중 자동 migration은 없다. 이름 충돌 시 실패하며 기존 스키마를 덮어쓰지 않는다.
-- `api/index.py`, `requirements.txt`, `.python-version`, `vercel.json`: Python 3.12 ASGI·정적 자산 포함·30초 함수 예산의 배포 후보 설정. 실제 Vercel 빌드/라우팅은 미검증이다.
+- `api/index.py`, `requirements.txt`, `.python-version`, `vercel.json`: Python 3.12 FastAPI·정적 자산 포함·30초 함수 예산 설정. 공식 빌더 로컬 패키징은 통과했지만 실제 Vercel 빌드/라우팅은 미검증이다.
 
 ## 최소 권한 경계
 
@@ -72,14 +72,22 @@ PostgreSQL 테스트는 명시적 `OURCOMMUNITY_TEST_POSTGRES=1`이 없으면 in
 | PostgreSQL | **17.11** Docker의 실제 제한 runtime 계정으로 검증. 새 DB 초기 migration·소유자 임시 membership 회수(잔여 0)·preflight Pass |
 | 기존 브라우저 회귀 | **9 passed**, 실제 Chromium. 기존 SQLite 개발 흐름 유지 |
 | 공유 체험 브라우저 | **2 passed**, 로컬 ASGI 진입점의 **2 worker** + PostgreSQL. 모바일/데스크톱·메시지/새로고침·신청·역할 전환·출석/성장·별도 방문자 격리 |
-| 린트/타입/빌드 | ESLint·TypeScript·Vite·토큰 검사 Pass. 하네스 오류 0·기존 제3자 경고 2, UI strict audit 오류/경고 0 |
-| 문서·설정 | 상대 링크·YAML/JSON·변경 공백 Pass. Vercel 공식 JSON schema의 직접 조회는 실패하여 호스트 설정 수용 여부는 미검증 |
+| 린트/타입/빌드 | ESLint·TypeScript·Vite·토큰 검사 Pass. 하네스 오류 0·경고 3(PG 테스트 파일 301줄 1건, 기존 제3자 2건), UI strict audit 오류/경고 0 |
+| 문서·설정 | 상대 링크·YAML/JSON·변경 공백 Pass. 공식 JSON schema 직접 조회는 실패했으나 @vercel/build-utils 함수 설정 schema 검사 Pass; 실제 호스트 수용 여부는 미검증 |
 | 독립 검토 | 코드/권한 검토 후 접두사 검사 수정, 외부 sequence·소유권 검사와 알림 event 복합 FK 보강. 정적 재검토에서 추가 HTTP 누출/정원 차단 결함 미발견 |
 
 실제 DB 테스트는 앱 인스턴스 교체 후 같은 session 유지, 다른 방문자의 세션 혼용/직접 ID 거부, 생성 상한 경합, 동시 정원·중복 재시도·취소/대기 수락, 출석 중복/정정, 탈퇴 후 접근, RLS INSERT/UPDATE·복합 FK, commit/rollback 뒤 tenant 미설정 상태, 죽은 요청 lease 회수, 실패 요청 예산 유지, 다른 제품 sentinel 무변경을 다룬다. PUBLIC 함수/sequence 권한 탐지 테스트의 대상도 외부가 아닌 로컬 모조 스키마다.
 
 로그인 응답을 기다리지 않고 다음 요청/페이지 이동을 하던 체험 테스트를 수정해, 인증 완료 화면을 확인한 뒤 진행하도록 했다. 로컬 초기화 스크립트도 빈 fixture에서 실제 실행해 검증했다. [모바일 증거](screenshots/postgres-mobile-memories.png), [데스크톱 증거](screenshots/postgres-desktop-space.png)는 합성 데이터와 로컬 Chromium 화면이다.
 
-**남은 검증:** 실제 Supabase의 유효 권한·TLS/CA·Supavisor 풀러, Vercel의 `icn1` 배치·Python 빌드/함수 번들/rewrites/Host 보존, 공개 HTTPS·실기기 iPhone·부하/가용성. 이번 PostgreSQL 버전의 Docker 이미지 재빌드나 외부 배포는 하지 않았다. 공개 URL·배포 revision은 없다.
+**남은 검증:** 실제 Supabase의 유효 권한·TLS/CA·Supavisor 풀러, Vercel의 `icn1` 배치·클라우드 빌드/함수 라우팅/Host 보존, 공개 HTTPS·실기기 iPhone·부하/가용성. 외부 배포는 하지 않았으며 공개 URL·배포 revision은 없다.
 
 승인 이후 실행 순서는 [배포 실행 인계](deployment-handoff.md)의 변경 전 읽기 SQL → 전용 migration → 역할 권한 검사 순서다. 컬럼 단위로만 부여된 기존 권한도 탐지하고 차단한다.
+
+## Vercel 빌드 준비 확인
+
+`@vercel/python@30.0.0`과 `@vercel/build-utils@15.2.0`의 실제 빌더를 로컬에서 실행했다. 중첩 requirements 참조 오류를 피하도록 루트 `requirements.txt`를 의존성 원본으로 삼고 로컬 설치용 `requirements-app.txt`가 이를 참조하게 했다. Docker 복사 목록도 맞췄다. `framework: fastapi`를 명시해 화면 buildCommand를 실행하고, 별도 catch-all rewrite를 제거해 원래 경로를 유지한다.
+
+[빌더 결과](vercel-build-check.json): `python3.12`의 FastAPI 함수 한 개, 화면 자산 130개와 index.html, psycopg 포함, 전체 파일 1,039개. 일반 소스 폴더를 정적 사이트 루트로 내보내지 않는다. 실제 비밀정보 없이 합성 연결 설정으로 빌드했으며 외부 DB 연결·호스트 배포는 하지 않았다.
+
+같은 의존성 구조로 Docker 이미지 `sha256:df48d5c551bf2338cd76912991223e1acb448e528dcec8c03892100a5bd1a2be`도 다시 빌드했다. 비루트·읽기 전용 root·권한 제거 상태에서 로컬 PostgreSQL에 연결해 health, SPA 깊은 링크, 세션/가상 역할, 메시지 조회, 다른 그룹 접근 거부, 잘못된 Origin 거부, noindex/no-store를 확인했다. 이 컨테이너 점검은 공개 배포나 실기기 검증이 아니다.

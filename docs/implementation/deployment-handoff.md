@@ -37,7 +37,7 @@
 
 ## 4. Vercel preview 실행
 
-검증된 기능 브랜치 `feat/sports-community-prototype`의 정확한 SHA로 **preview**를 만든다. PR은 기존 [#1](https://github.com/keestory/ourcommunity/pull/1)을 갱신한다. [vercel.json](../../vercel.json)은 Python 3.12/ASGI·서울 `icn1`·30초 함수·web/dist 포함·같은 origin rewrite 후보 설정이다. GitHub 원격 main을 병합하거나 production target으로 배포하지 않는다.
+검증된 기능 브랜치 `feat/sports-community-prototype`의 정확한 SHA로 **preview**를 만든다. PR은 기존 [#1](https://github.com/keestory/ourcommunity/pull/1)을 갱신한다. [vercel.json](../../vercel.json)은 Python 3.12/FastAPI·서울 `icn1`·30초 함수·web/dist 포함 설정이다. FastAPI 기본 라우팅이 원래 요청 경로를 유지하므로 별도 catch-all rewrite를 추가하지 않는다. 공식 Python 빌더의 로컬 패키징은 통과했으며 실제 호스트 적용은 별도 확인한다. GitHub 원격 main을 병합하거나 production target으로 배포하지 않는다.
 
 실제 호스트가 설정을 거부하거나 정적 자산을 누락하면 빌드/런타임 로그에서 비밀 값 없이 원인을 전달한다. 설정 변경·브랜치 수정으로 해결하고 새 SHA를 검증한다. 이 설정 파일 존재만으로 Vercel에서 빌드됐다고 말하지 않는다.
 

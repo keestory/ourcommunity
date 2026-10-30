@@ -34,10 +34,10 @@ status:
   competitive_benchmark: not-applicable
   updated_at: '2026-10-30'
   timezone: Asia/Seoul
-  discoverability_reason: 기존 프리뷰 Host/Origin·noindex 계약 유지; Vercel 배포 URL의 정확한 origin 후보와 rewrite는 공개 검증 전
+  discoverability_reason: 기존 프리뷰 Host/Origin·noindex 계약 유지; FastAPI 기본 라우팅의 로컬 패키징 확인, Vercel 공개 URL 검증 전
   local_implementation_verdict: pass
   competitive_benchmark_reason: 이번 변경은 기존 제품의 격리 체험·호스팅 준비이며 신규 경쟁/시장 판단 없음; 기존 패턴 근거 보존
-  preview_container_verdict: pass at a6d22bc; PostgreSQL version tested as local ASGI, image rebuild not run
+  preview_container_verdict: pass; PostgreSQL image rebuilt, non-root/read-only local API smoke passed
   public_deployment_verdict: blocked
   postgres_local_verdict: pass
   external_connection_approval: approved 2026-10-30 01:00 UTC
@@ -109,6 +109,8 @@ execution:
   - Docker 이미지 빌드·비루트/읽기 전용 root 실행, Python 79개·브라우저 11개 통과
   - 전용 PostgreSQL migration/제한 role/tenant RLS·복합 제약·공유 guest/lease/요청 예산 어댑터 로컬 구현
   - PostgreSQL17.11 새 fixture 초기화, Python96개·브라우저 기존9+공유체험2 검증
+  - 승인 범위의 외부 SQL preflight 준비, PUBLIC 컬럼 권한 검사 추가 후 Python97개 통과
+  - 공식 Vercel Python 빌더 로컬 패키징 및 PostgreSQL Docker 재빌드/API smoke 통과
   blockers:
   - 'Gate0: 대상/기기/성공·중단 기준 미확정'
   - 'Gate1: 기능 설명 외에 독립 고객 문제/수요 근거 부족'
@@ -127,14 +129,14 @@ execution:
     branch: feat/sports-community-prototype
     verified_implementation_sha: a6fcc3bda2c8607b10025a751a0a3224c5636417
     draft_pr: https://github.com/keestory/ourcommunity/pull/1
-    ci: a6d22bcb83c01ef842a530b5bc7dce8735b5fe93 원격 statuses/check_runs 0 (관리 작업 확인); PostgreSQL 준비 변경은 로컬
+    ci: a6d22bcb83c01ef842a530b5bc7dce8735b5fe93 원격 statuses/check_runs 0 (관리 작업 확인); 이후 SHA의 원격 CI는 미확인
     main_changed: false
-    last_verified_remote_sha: a6d22bcb83c01ef842a530b5bc7dce8735b5fe93
+    last_verified_remote_sha: 12575270ff8e39962c9c96955647f5a607a11e2f
   preview:
     public_url: null
     deployment_revision: null
     runtime: SQLite single-process or PostgreSQL shared-state preview; no external deployment
-    local_image: sha256:f73d12703f85c402366984148511197f186d43ddec8cf5a623784d907eea8322
+    local_image: sha256:df48d5c551bf2338cd76912991223e1acb448e528dcec8c03892100a5bd1a2be
     report: docs/implementation/preview-deployment.md
     external_auth: false
     device_push: false
@@ -148,7 +150,7 @@ execution:
       schema: ourcommunity_preview
       runtime_role: ourcommunity_preview_runtime
       report: docs/implementation/postgres-preview.md
-    local_image_revision: a6d22bcb83c01ef842a530b5bc7dce8735b5fe93
+    local_image_revision: 1257527 plus canonical requirements and FastAPI configuration changes in this commit
 quality:
   report: docs/implementation/postgres-preview.md
   acceptance_evidence:
@@ -158,7 +160,8 @@ quality:
   tests:
   - 'Python97 passed: 기준79 + PostgreSQL 관련18(실제 로컬DB11/설정7)'
   - 기존 Chromium E2E9 passed + PostgreSQL 2worker 체험 E2E2 passed
-  - ESLint/TypeScript/Vite build 및 strict UI audit Pass; 하네스 오류0·기존 제3자경고2
+  - ESLint/TypeScript/Vite build 및 strict UI audit Pass; 하네스 오류0·경고3(PG 테스트 파일 길이1/기존 제3자2)
+  - 공식 Vercel Python 빌더 로컬 패키징 및 함수 설정 schema Pass; PostgreSQL Docker 빌드·API smoke Pass
   - 실제 Supabase 권한/TLS/Supavisor·Vercel 빌드/공개 URL·iPhone 실기기 미검증
   unresolved_risks:
   - 실제 고객 수요·그룹 이전·반복 사용·성장 효과 미검증
@@ -166,7 +169,7 @@ quality:
   - 공개 집계 k/지연은 시험 정책이며 익명성 보장·실데이터 공개 승인이 아님
   - 운영자 공모·공정성·부상/장애 참여·시설 변경/자산 귀속 정책 미검증
   - SQLite 단일 인스턴스/폴링의 성능·실제 모바일 기기·운영 가용성 미검증
-  - 체험은 1시간/재시작 시 초기화, 다중 worker/인스턴스 미지원; 공개 호스팅·부하/가용성 검증 필요
+  - SQLite 체험은 재시작 초기화·단일 worker 제한; PostgreSQL 체험은 1시간 만료·공유 상태이며 공개 호스팅/부하/가용성 검증 필요
   - PostgreSQL 만료는 접근 차단이며 물리회수는 다음 guest 생성 시; 백업 보관·엄격 삭제 시한 미확정
   - 기존 PUBLIC 권한을 runtime이 상속할 수 있어 실제 프로젝트에서 별도 검사 필요; 기존 권한 자동 회수 금지
 artifacts:
@@ -200,3 +203,4 @@ artifacts:
 - migrations/000_preview_preflight.sql
 - migrations/002_preview_privilege_check.sql
 - docs/implementation/deployment-handoff.md
+- docs/implementation/vercel-build-check.json

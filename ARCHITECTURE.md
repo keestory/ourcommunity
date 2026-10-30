@@ -74,4 +74,4 @@ web/ (React + TypeScript + Vite)
 
 후속 로컬 준비에서 `PREVIEW_DATABASE_URL`이 지정된 체험 모드를 추가했다. `postgres_preview.py`가 guest·lease·요청 예산을 PostgreSQL에 두고, guest 행 잠금과 트랜잭션 한정 tenant 설정 뒤 `postgres.py`의 SQL 어댑터로 기존 업무 로직을 실행한다. 모든 도메인 테이블의 RLS와 복합 tenant 제약은 별도 migration에서 준비한다. 프로세스마다 저장소를 만드는 기존 SQLite 체험과 명시적으로 분기한다.
 
-`api/index.py`와 `vercel.json`은 공유 모드용 배포 후보이며 외부 적용·실제 함수 빌드는 아직 하지 않았다. `VERCEL=1`에서 공유 DSN이 없으면 시작을 거부한다. 전용 스키마·최소 역할·TLS·기존 PUBLIC 권한 검사 및 승인 후 단계는 [공유 PostgreSQL 준비](./docs/implementation/postgres-preview.md)를 따른다. 기존 public/Auth와 하네스에는 새 데이터 경로나 권한을 연결하지 않는다.
+`api/index.py`와 FastAPI 프레임워크를 명시한 `vercel.json`은 공유 모드용 설정이다. 공식 Python 빌더의 로컬 함수 패키징은 통과했으며 실제 Vercel 외부 적용은 아직 하지 않았다. `VERCEL=1`에서 공유 DSN이 없으면 시작을 거부한다. 전용 스키마·최소 역할·TLS·기존 PUBLIC 권한 검사 및 승인 후 단계는 [공유 PostgreSQL 준비](./docs/implementation/postgres-preview.md)를 따른다. 기존 public/Auth와 하네스에는 새 데이터 경로나 권한을 연결하지 않는다.

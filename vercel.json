@@ -8,13 +8,8 @@
       "excludeFiles": "{web/node_modules/**,tests/**,.harness/**,.venv/**,docs/**}"
     }
   },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/api/index"
-    }
-  ],
   "regions": [
     "icn1"
-  ]
+  ],
+  "framework": "fastapi"
 }

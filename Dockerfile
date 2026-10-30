@@ -10,7 +10,7 @@ RUN npx tsc --noEmit && npx vite build
 FROM python:3.12-slim-bookworm AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PREVIEW_MODE=1 PORT=8080 WEB_CONCURRENCY=1
 WORKDIR /app
-COPY requirements-app.txt ./
+COPY requirements.txt requirements-app.txt ./
 RUN --mount=type=secret,id=build_ca \
     if [ -f /run/secrets/build_ca ]; then export PIP_CERT=/run/secrets/build_ca; fi; \
     pip install --no-cache-dir -r requirements-app.txt && useradd --uid 10001 --create-home preview

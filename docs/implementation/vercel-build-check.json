@@ -1,0 +1,37 @@
+{
+  "resultVersion": 2,
+  "outputs": [
+    "fastapi"
+  ],
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "handle": "rewrite"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/fastapi",
+      "transforms": [
+        {
+          "type": "request.path",
+          "op": "set",
+          "args": "/$1"
+        }
+      ]
+    }
+  ],
+  "runtime": "python3.12",
+  "assets": 130,
+  "hasIndex": true,
+  "hasPsycopg": true,
+  "fileCount": 1039,
+  "verified_at": "2026-10-30",
+  "mode": "local builder only; no deployment or external DB connection",
+  "python_builder": "@vercel/python@30.0.0",
+  "build_utils": "@vercel/build-utils@15.2.0",
+  "functions_config_schema": "pass",
+  "build_environment": "synthetic non-secret PostgreSQL settings; no live credentials",
+  "changes_verified": "canonical root requirements.txt, framework=fastapi, no catch-all rewrite"
+}
