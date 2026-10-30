@@ -13,3 +13,8 @@
 - 남은 가정과 담당자
 
 실행 순서가 복잡하면 [`../PLANS.md`](../PLANS.md)에 별도 계획을 만든다.
+
+## 검토 중인 제품 제안 — 승인된 사양 아님
+
+- [ourcommunity 준비 패키지](ourcommunity/README.md) — 2026-10-29, 비공개 그룹 대화·공동 성장·활기 표현·운동 참여. Gate 0–2 Blocked, PRD/ADR은 초안.
+- [제품 상태](../product-state.yaml)와 [문서 검토 결과](ourcommunity/review-report.md)에서 제품 증거와 문서 검증을 구분한다.

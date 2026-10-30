@@ -1,0 +1,224 @@
+schema_version: 1
+product:
+  name: ourcommunity
+  one_line: 비공개 그룹 대화와 운동 참여가 함께 꾸미고 키우는 커뮤니티 공간으로 연결되는 서비스
+  target_market: 한국은 준비용 가정; 국가 확정·도시·확보 그룹은 미정
+  primary_user: 스포츠 직접 참여자; 첫 검증은 러닝 크루로 사용자 확정, 크로스핏은 비교/후속 후보
+  repository_baseline: 447c0a61883d6e0f0002a0f63735b7b58fa63441
+  implemented_product: true
+  initial_validation: 과금 없는 모바일 웹에서 일정·신청·출석과 기존 비공개 대화·공동 성장 경험 검증
+status:
+  active_gate: 0
+  gates_in_preparation:
+  - 0
+  - 1
+  - 2
+  gate_verdict: blocked
+  review_level: L2 Clubroom redesign; local browser QA and independent review
+  review_verdict: pass
+  task_grade: S2 UI 리디자인 / 기존 브라우저 체험 보존
+  primary_industry: community
+  secondary_industries:
+  - o2o-reservation
+  - game
+  primary_capability: product-implementation
+  supporting_capabilities:
+  - product-planning
+  - design-intelligence
+  - quality-assurance
+  - privacy
+  task_scope: 과거 디자인 근거 복구 및 대화·모임·공동 공간 리디자인; 기존 IndexedDB/서버 보존, 기능 브랜치 게시, 공개 배포는 부모 인계
+  discoverability: required
+  store_compliance: not-applicable
+  store_compliance_reason: 로컬 브라우저 제품이며 모바일 스토어 제출 없음; 네이티브 선택 시 재판정
+  competitive_benchmark: required
+  updated_at: '2026-10-30'
+  timezone: Asia/Seoul
+  discoverability_reason: 기존 URL·라우트·noindex/CSP 계약 유지; 리디자인 공개 배포 및 실제 iPhone 확인은 별도
+  local_implementation_verdict: pass
+  competitive_benchmark_reason: 사용자 과거 리서치와 실제 공개 audit 회수; 공식 기능 패턴 전달과 직접 접근403·미관찰 화면을 구분해 references.md에 기록
+  preview_container_verdict: pass; PostgreSQL image rebuilt, non-root/read-only local API smoke passed
+  public_deployment_verdict: baseline 2c79fea READY verified by parent; redesign awaits parent deployment; child public QA blocked by execution-network restrictions
+  postgres_local_verdict: pass
+  external_connection_approval: approved 2026-10-30 01:00 UTC
+evidence:
+  register: docs/product-specs/ourcommunity/evidence-decisions.md
+  observed_facts:
+  - 'E01/E02: 직접 운동 참여자, 러닝/크로스핏 후보라는 사용자 인용 전달'
+  - 'E04: 우리 앱으로 이동해 지속 대화한다는 확정 방향'
+  - 'E11: 참여가 커뮤니티/시설을 함께 꾸미고 키우는 애셋이 되는 비전'
+  - 'E12: 채팅 원문 비공개, 독특한 활기 표현 요구'
+  - 'E05: 가져온 32개 테스트는 하네스 기준선; 이후 서비스 테스트는 별도 실행'
+  - 'E15: 사용자 후속 요청으로 로컬 제품 개발 승인; 연구 완료·출시 승인은 아님'
+  - 'E17: 지연된 준비 질문 응답으로 러닝 우선·초기 모바일 웹 무료 검증 선택; 이후 채팅/공동 성장 및 개발 승인 유지'
+  - 'E18: 휴대폰 체험 배포 승인; 컨테이너 경계와 기존 브랜치 수정·푸시 포함'
+  - 'E19: 관리 작업의 기존 PR #1·Vercel 팀 확인 전달; 현재 함수 저장 구조 미호환'
+  - 'E20: 관리 작업이 기존 Supabase 서울 PostgreSQL17 및 다른 제품 public 데이터 확인; 외부 지속 연결 승인 대기'
+  - 'E21: a6d22bc 원격 statuses/check_runs 0 확인 전달'
+  - 'E22: 2026-10-30 01:00 UTC 전용 지속 연결 승인 전달. 지정 Supabase/Vercel 범위만 적용'
+  official_source_reviews_received:
+  - 'E07–E10: Heylo/Wodify/SugarWOD/WebKit 공식자료를 관리 작업이 확인하여 전달'
+  - 'E14/R01–R05: Clubhouse/Gather Classic/Discord/Habitica/Forest 공식 패턴 검토 전달'
+  external_estimates: []
+  assumptions:
+  - 한국은 가정; 도시/실제 그룹/생산 플랫폼/장기 과금 미정. 초기 러닝·무료 모바일 웹 검증은 확정
+  - 2D 디지털 공동 공간·비금전 기념물·검증된 기여는 신규 제안
+  - 작은 그룹 억제·지연·단계화와 영구성장/최근활기 분리는 제안
+  contradictions:
+  - 카카오 유지·채팅 제외·운영도구 우선 가정은 사용자 E04로 폐기
+  - 기능 조합 자체는 Heylo 대비 차별화 근거가 아님
+  - 그룹 전환/소속감 효과와 고객 수요는 아직 검증되지 않음
+  expiring_evidence:
+  - 공식자료 확인 2026-10-29; 30일 경과 또는 플랫폼/정책 변경 시 재검토
+decisions:
+  log: docs/product-specs/ourcommunity/evidence-decisions.md
+  latest:
+  - D02
+  - D07
+  - D09
+  - D11
+  - D12
+  - D13
+  - D14
+  - D15
+  - D16
+  - D17
+  - D18
+  pending_user_decisions:
+  - 'Q1: 첫 검증 지역과 접근 가능한 실제 러닝 크루'
+  - 'Q2: 초기 모바일 웹의 대상 기기와 설치/알림/복귀 요구; 생산 플랫폼은 후속 검증'
+  - 'Q3: 공동 공간의 표현과 의미 있는 첫 기여 후보'
+  superseded_question: 과거 일정 중심 질문의 지연 답변은 러닝·무료 모바일 웹 검증 선택으로 반영; 이후 비공개 대화·공동 성장 방향이나 개발 승인을 철회하지 않음
+  stop_conditions:
+  - 외부 메신저 재전달/운영자 독촉 없이는 대화 유지 안 됨
+  - 기여 규칙이 도배·과도 운동·배제·공개 감시를 유발
+  - 권한/소수 집계/삭제/운영 대응의 중대한 위험 미해결
+execution:
+  active_work:
+  - 브라우저 단독 데모 구현·검증 후 기존 Vercel Hobby 정적 preview 배포 및 공개 URL QA
+  completed_work:
+  - 하네스 103파일/20역할 복사와 원격 main 확인은 이전 작업에서 완료
+  - 확정 비전/가정/근거·PRD·성장·활기·ADR·측정·QA 초안 작성
+  - 14개 문서 변경, 61개 상대 링크·YAML·공백 검사와 기존 린터 통과
+  - FastAPI/SQLite API와 서비스 테스트 19개 작성; 기존 32개 포함 51개 통과(초기 실행)
+  - 비공개 대화·모임·출석·공동 공간을 실제 API에 연결한 한국어 웹 구현
+  - 독립 검토 6개 기능 결함과 접근성 개선, Python 65개 및 브라우저9개 최종 통과
+  - 합성 데이터 화면 11개와 실행·검증 기록 작성; 원격 푸시·배포 없음
+  - '기존 기능 브랜치와 초안 PR #1 게시 확인; main 유지'
+  - 방문자별 임시 DB·역할 선택·상한·만료·Origin/Host/본문 경계를 갖춘 체험 모드
+  - Docker 이미지 빌드·비루트/읽기 전용 root 실행, Python 79개·브라우저 11개 통과
+  - 전용 PostgreSQL migration/제한 role/tenant RLS·복합 제약·공유 guest/lease/요청 예산 어댑터 로컬 구현
+  - PostgreSQL17.11 새 fixture 초기화, Python96개·브라우저 기존9+공유체험2 검증
+  - 승인 범위의 외부 SQL preflight 준비, PUBLIC 컬럼 권한 검사 추가 후 Python97개 통과
+  - 공식 Vercel Python 빌더 로컬 패키징 및 PostgreSQL Docker 재빌드/API smoke 통과
+  blockers:
+  - 'Gate0: 대상/기기/성공·중단 기준 미확정'
+  - 'Gate1: 기능 설명 외에 독립 고객 문제/수요 근거 부족'
+  - 'Gate2: 인터뷰·자발적 이전·반복 행동 증거 없음; 실제 모집/연락 미승인'
+  - 'Game Concept/Prototype: 비교/과업/공정성 시험 미완료'
+  - 'Gate3–5: 사업/UX/권한·보관·운영·집계/기여 규칙 미확정'
+  - 'Public preview: 브라우저 데모의 공개 URL 생성 및 외부 QA 미완료; Supabase 연결은 보류'
+  next_step: 부모 Vercel connector로 rootDirectory=web, buildCommand=npm run build:demo, outputDirectory=dist-demo 정적 preview 배포 후 URL QA
+  plan: docs/product-specs/ourcommunity/execution-qa.md
+  code_changes: true
+  commit_created: true
+  remote_push: true
+  deployed: true
+  external_contact: false
+  publication:
+    branch: feat/sports-community-prototype
+    verified_implementation_sha: a6fcc3bda2c8607b10025a751a0a3224c5636417
+    draft_pr: https://github.com/keestory/ourcommunity/pull/1
+    ci: a6d22bcb83c01ef842a530b5bc7dce8735b5fe93 원격 statuses/check_runs 0 (관리 작업 확인); 이후 SHA의 원격 CI는 미확인
+    main_changed: false
+    last_verified_remote_sha: d956de9c08b9cd7c73102d8af3dfbebc5575574f
+  preview:
+    public_url: https://ourcommunity-demo.vercel.app
+    deployment_revision: 2c79feace2fedae0b9ea86082ada87b205e0eee8
+    deployment_target: production in separate new ourcommunity-demo project
+    deployment_id: dpl_571hPuoG3cb1uTiQVs5oJzccmMND
+    deployment_status: READY and aliasError null verified by parent connector; public functional QA network-blocked
+    deployment_check: docs/implementation/browser-demo-deployment-check.json
+    runtime: browser-only static demo candidate; existing Python/SQLite/PostgreSQL modes preserved
+    local_image: sha256:df48d5c551bf2338cd76912991223e1acb448e528dcec8c03892100a5bd1a2be
+    report: docs/implementation/preview-deployment.md
+    external_auth: false
+    device_push: false
+    physical_iphone_test: false
+    postgres:
+      state: paused by user request for Supabase-free demo
+      external_approval: approved
+      external_schema_applied: false
+      external_credentials_configured: false
+      local_database_version: '17.11'
+      schema: ourcommunity_preview
+      runtime_role: ourcommunity_preview_runtime
+      report: docs/implementation/postgres-preview.md
+    local_image_revision: 1257527 plus canonical requirements and FastAPI configuration changes in this commit
+quality:
+  report: docs/design-docs/ourcommunity-redesign/README.md
+  acceptance_evidence:
+  - 기존 준비 문서 L1 결과는 보존; 구현 검증은 별도 기록
+  - 독립 백엔드/프런트 검토 및 수정 후 재검증 완료
+  - strict UI audit 오류·경고 0; 토큰/문서 링크/YAML/공백 검사 Pass
+  tests:
+  - 리디자인 최종 데모13 passed(기존8+신규5), 서버 연결10 passed(기존9+갱신실패1); lint/typecheck/tokens/두build/strict audit Pass
+  - '브라우저 단독 체험8 passed; 서버 연결 모드 브라우저9 passed, API 호출0 및 저장 실패/동시 탭/초기화 검증'
+  - '브라우저 체험 lint/typecheck/tokens/build 및 기존 웹 build Pass; strict UI audit 오류0·경고0'
+  - 'Python97 passed: 기준79 + PostgreSQL 관련18(실제 로컬DB11/설정7)'
+  - 기존 Chromium E2E9 passed + PostgreSQL 2worker 체험 E2E2 passed
+  - ESLint/TypeScript/Vite build 및 strict UI audit Pass; 하네스 오류0·경고3(PG 테스트 파일 길이1/기존 제3자2)
+  - 공식 Vercel Python 빌더 로컬 패키징 및 함수 설정 schema Pass; PostgreSQL Docker 빌드·API smoke Pass
+  - Supabase 연결은 보류; 정적 Vercel 공개 URL·iPhone 실기기 미검증
+  unresolved_risks:
+  - 실제 고객 수요·그룹 이전·반복 사용·성장 효과 미검증
+  - 생산 인증·푸시·계정 삭제/보관·소유권 이전·운영 체계 미구현
+  - 공개 집계 k/지연은 시험 정책이며 익명성 보장·실데이터 공개 승인이 아님
+  - 운영자 공모·공정성·부상/장애 참여·시설 변경/자산 귀속 정책 미검증
+  - SQLite 단일 인스턴스/폴링의 성능·실제 모바일 기기·운영 가용성 미검증
+  - SQLite 체험은 재시작 초기화·단일 worker 제한; PostgreSQL 체험은 1시간 만료·공유 상태이며 공개 호스팅/부하/가용성 검증 필요
+  - PostgreSQL 만료는 접근 차단이며 물리회수는 다음 guest 생성 시; 백업 보관·엄격 삭제 시한 미확정
+  - 기존 프로젝트 PUBLIC 권한 검사에서 전용 영역 한정 조건 미충족 확인; 권한 변경 없이 Supabase 작업 보류
+artifacts:
+- docs/design-docs/ourcommunity-redesign/README.md
+- docs/design-docs/ourcommunity-redesign/references.md
+- docs/design-docs/ourcommunity-redesign/patterns.md
+- docs/design-docs/ourcommunity-redesign/verification.json
+- docs/implementation/browser-demo-deployment-check.json
+- docs/implementation/browser-demo-audit.json
+- docs/implementation/screenshots/browser-demo-mobile.png
+- docs/implementation/screenshots/browser-demo-desktop.png
+- docs/implementation/browser-demo.md
+- docs/product-specs/ourcommunity/README.md
+- docs/product-specs/ourcommunity/product-brief.md
+- docs/product-specs/ourcommunity/evidence-decisions.md
+- docs/product-specs/ourcommunity/prd-draft.md
+- docs/product-specs/ourcommunity/shared-growth.md
+- docs/product-specs/ourcommunity/activity-patterns.md
+- docs/product-specs/ourcommunity/data-architecture.md
+- docs/product-specs/ourcommunity/research-metrics.md
+- docs/product-specs/ourcommunity/execution-qa.md
+- docs/product-specs/ourcommunity/review-report.md
+- README.md
+- DESIGN.md
+- UX-CONTRACT.md
+- docs/implementation/local-product.md
+- docs/implementation/verification.md
+- docs/implementation/changed-files.txt
+- docs/implementation/premium-audit.json
+- docs/implementation/design-lint.json
+- docs/implementation/preview-deployment.md
+- docs/implementation/screenshots/preview-mobile-memories.png
+- docs/implementation/screenshots/preview-desktop-space.png
+- Dockerfile
+- docs/implementation/postgres-preview.md
+- migrations/001_preview_postgres.sql
+- vercel.json
+- docs/implementation/screenshots/postgres-mobile-memories.png
+- docs/implementation/screenshots/postgres-desktop-space.png
+- migrations/000_preview_preflight.sql
+- migrations/002_preview_privilege_check.sql
+- docs/implementation/deployment-handoff.md
+- docs/implementation/vercel-build-check.json
+
+# Latest static demo evidence is maintained in the linked report.

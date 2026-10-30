@@ -1,0 +1,2 @@
+# Backward-compatible local/container install entry.
+-r requirements.txt

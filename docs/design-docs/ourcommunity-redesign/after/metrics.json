@@ -1,0 +1,46 @@
+[
+  {
+    "name": "desktop",
+    "width": 1180,
+    "height": 757,
+    "composer": {
+      "x": 253,
+      "y": 652,
+      "width": 546,
+      "height": 52
+    }
+  },
+  {
+    "name": "mobile",
+    "width": 390,
+    "height": 844,
+    "composer": {
+      "x": 23,
+      "y": 705,
+      "width": 278,
+      "height": 52
+    }
+  },
+  {
+    "name": "narrow",
+    "width": 320,
+    "height": 780,
+    "composer": {
+      "x": 23,
+      "y": 641,
+      "width": 208,
+      "height": 52
+    }
+  },
+  {
+    "name": "short",
+    "width": 390,
+    "height": 500,
+    "composer": {
+      "x": 23,
+      "y": 369,
+      "width": 278,
+      "height": 44
+    }
+  }
+]

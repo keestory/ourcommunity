@@ -1,0 +1,15 @@
+export type User = { id: string; username: string; display_name: string; color: string }
+export type Session = { user: User | null; csrf: string | null; demo: boolean; preview?: { enabled: boolean; isolated: boolean; persistent: boolean; restart_resets?: boolean; storage?: string; expires_at: string | null; ttl_seconds: number; mutation_limit: number; sharing_enabled: boolean } }
+export type SpaceSlot = 'entry' | 'center' | 'garden'
+export type Group = { space_layout?: Record<string, SpaceSlot>; id: string; name: string; description: string; subtitle: string; role: 'owner' | 'organizer' | 'member'; member_count: number; public_space: boolean; palette: 'dawn' | 'forest' | 'sunset'; version: number; preferences: { muted: boolean; activity_consent: boolean } }
+export type Member = Pick<User, 'id' | 'display_name' | 'color'> & { role: string }
+export type Message = { id: number; seq: number; client_id: string; body: string; author: Pick<User,'id' | 'display_name' | 'color'>; created_at: string; deleted: boolean; mine: boolean }
+export type MessagePage = { items: Message[]; next_cursor: number; has_more: boolean; read_seq: number; unread_count: number }
+export type Announcement = { id: number; body: string; author_name: string; created_at: string }
+export type Attendance = { user_id: string; display_name: string; color: string; status: string; attendance: 'present' | 'absent' | 'unmarked' }
+export type EventItem = { id: number; group_id: string; title: string; description: string; location: string; starts_at: string; ends_at: string; capacity: number; status: 'published' | 'cancelled'; version: number; confirmed_count: number; offered_count: number; waiting_count: number; my_status: null | 'confirmed' | 'waitlisted' | 'offered' | 'cancelled' | 'expired'; my_attendance: string | null; offer_expires_at: string | null; can_mark_attendance: boolean; attendees?: Attendance[] }
+export type Asset = { id: string; name: string; description: string; goal: number; unlocked: boolean; progress: number }
+export type Activity = { visible: boolean; stage: string; label: string; period: string }
+export type Growth = { assets: Asset[]; total_contributions: number; recent: Activity; rule: string }
+export type NotificationItem = { id: number; group_id: string; kind: string; title: string; event_id: number | null; read: boolean; created_at: string }
+export type List<T> = { items: T[] }

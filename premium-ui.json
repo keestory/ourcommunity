@@ -1,0 +1,11 @@
+{
+  "profile": "product-admin",
+  "locale": "ko-KR",
+  "sourceRoots": ["web/src"],
+  "canonicalMap": "UX-CONTRACT.md",
+  "requiredCapabilities": ["Select/Listbox", "Date", "Form", "Scrollbar", "Toast", "CRUD"],
+  "ownership": { "Select/Listbox": "native", "Date": "native" },
+  "requiredCommands": ["lint", "typecheck", "build", "browser"],
+  "commands": { "lint": "npm --prefix web run lint", "typecheck": "npm --prefix web run typecheck", "build": "npm --prefix web run build", "browser": "npm --prefix web run test:e2e" },
+  "evidence": { "crudFullFlow": "web/tests/product.spec.ts", "failurePaths": "web/tests/product.spec.ts" }
+}

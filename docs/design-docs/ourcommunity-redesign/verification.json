@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-30",
+  "baseline": "2c79feace2fedae0b9ea86082ada87b205e0eee8",
+  "scope": "local Clubroom redesign; remote publication handled separately",
+  "browser_demo": {
+    "passed": 13,
+    "existing": 8,
+    "new": 5,
+    "api_requests_in_journey": 0
+  },
+  "server_connected_browser": {
+    "passed": 10,
+    "existing": 9,
+    "new": 1
+  },
+  "checks": {
+    "eslint": "pass",
+    "typescript": "pass",
+    "tokens": "pass",
+    "demo_build": "pass",
+    "normal_build": "pass",
+    "premium_strict": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "harness": {
+      "errors": 0,
+      "existing_warnings": 3
+    }
+  },
+  "independent_review": {
+    "blockers_remaining": 0,
+    "fixed": [
+      "short viewport must preserve storage warning",
+      "home must expose growth refresh error and retry"
+    ]
+  },
+  "not_claimed": [
+    "new public deployment",
+    "iPhone Safari or actual software keyboard QA",
+    "new Python97 run",
+    "user acceptance or product research gates"
+  ],
+  "storage": {
+    "engine": "IndexedDB",
+    "database": "ourcommunity-browser-demo-v1",
+    "version": 1,
+    "compatible_optional_field": "space_layout"
+  }
+}
